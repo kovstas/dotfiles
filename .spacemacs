@@ -399,6 +399,8 @@ you should place your code here."
                            "~/Dropbox/org/projects/planing/day-of-week-reports/"
                            "~/Dropbox/org/projects/planing/weeks/"))
 
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
