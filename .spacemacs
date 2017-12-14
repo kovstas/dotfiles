@@ -396,8 +396,8 @@ you should place your code here."
   (setq create-lockfiles nil)
 
   (setq org-agenda-files '("~/Dropbox/org/"
-                           "~/Dropbox/org/projects/planing/day-of-week-reports/"
-                           "~/Dropbox/org/projects/planing/weeks/"))
+                           "~/Dropbox/org/projects/planning/day-of-week-reports/"
+                           "~/Dropbox/org/projects/planning/weeks/"))
 
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
