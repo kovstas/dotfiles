@@ -383,12 +383,15 @@ you should place your code here."
   (setq powerline-default-separator 'nil)
   (setq powerline-default-separator 'wave)
   (spaceline-helm-mode)
+  (fancy-battery-mode)
   (spaceline-toggle-battery-on)
-  (spaceline-toggle-minor-modes-on)
+
+  (spaceline-toggle-minor-modes-off)
   (spaceline-toggle-flycheck-info-on)
   (spaceline-toggle-buffer-encoding-off)
   (spaceline-toggle-buffer-encoding-abbrev-off)
-  (spaceline-toggle-buffer-size-off)
+  (spaceline-toggle-input-method-on)
+  (spaceline-toggle-buffer-position-off)
 
   (spaceline-define-segment time
     "The current time."
@@ -404,6 +407,13 @@ you should place your code here."
   (setq org-agenda-files '("~/Dropbox/org/"
                            "~/Dropbox/org/projects/planning/day-of-week-reports/"
                            "~/Dropbox/org/projects/planning/weeks/"))
+
+  (setq org-pomodoro-length 25)
+  (setq org-pomodoro-short-break-length 5)
+  (setq org-pomodoro-long-break-length 30)
+
+  (spaceline-toggle-org-pomodoro-on)
+
 
 )
 
