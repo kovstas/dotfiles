@@ -59,11 +59,17 @@ values."
      html
      idris
      ipython-notebook
-     java
+
+     (java :variables
+           java-backend 'ensime)
+     (scala :variables
+            scala-auto-start-ensime t
+            scala-use-unicode-arrows t
+            scala-auto-insert-asterisk-in-comments t)
+
      javascript
      latex
      python
-     scala
      (scheme :variables
              scheme-program-name "mit")
      shell-scripts
@@ -143,7 +149,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner "~/Dropbox/spacemacs/images/logo.png"
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
