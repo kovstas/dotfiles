@@ -383,6 +383,7 @@ you should place your code here."
   (setq powerline-default-separator 'nil)
   (setq powerline-default-separator 'wave)
   (spaceline-helm-mode)
+
   (fancy-battery-mode)
   (spaceline-toggle-battery-on)
 
@@ -392,6 +393,7 @@ you should place your code here."
   (spaceline-toggle-buffer-encoding-abbrev-off)
   (spaceline-toggle-input-method-on)
   (spaceline-toggle-buffer-position-off)
+  (spaceline-toggle-buffer-size-off)
 
   (spaceline-define-segment time
     "The current time."
