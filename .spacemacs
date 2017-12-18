@@ -63,7 +63,6 @@ values."
      (java :variables
            java-backend 'ensime)
      (scala :variables
-            scala-auto-start-ensime t
             scala-use-unicode-arrows t
             scala-auto-insert-asterisk-in-comments t)
 
