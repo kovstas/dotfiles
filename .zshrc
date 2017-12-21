@@ -137,6 +137,6 @@ gitconfig () {
 
 # Work
 
-if [ -f ~/.work/init ]; then
-    . ~/.work/init
+if [ -f ~/.work/init.sh ]; then
+    . ~/.work/init.sh
 fi
