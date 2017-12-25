@@ -45,6 +45,7 @@ values."
      org
      (shell :variables
             shell-default-height 30
+            shell-default-full-span nil
             shell-default-position 'bottom)
      spell-checking
      syntax-checking
