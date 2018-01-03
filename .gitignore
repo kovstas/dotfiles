@@ -1,7 +1,8 @@
 # Ignore all
 *
 
-# Exclude 
+# Exclude
 !.gitignore
 !.spacemacs
 !.zshrc
+!.tmux.conf*
