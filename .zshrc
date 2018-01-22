@@ -140,3 +140,6 @@ gitconfig () {
 if [ -f ~/.work/init.sh ]; then
     . ~/.work/init.sh
 fi
+
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
