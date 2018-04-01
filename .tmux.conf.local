@@ -263,5 +263,7 @@ unbind-key C-b
 set -g prefix 'M-\'
 bind-key 'M-\' send-prefix
 
+set-option -g default-shell /bin/zsh
+
 # move status line to top
 #set -g status-position top
