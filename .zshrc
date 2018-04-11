@@ -138,8 +138,15 @@ gitconfig () {
 # Work
 
 if [ -f ~/.work/init.sh ]; then
-    . ~/.work/init.sh
+    #. ~/.work/init.sh
 fi
+
+if [ -f ~/Go ]; then
+    `mkdir ~/Go`
+fi
+
+export GOPATH="$HOME/Go"
+export PATH="$PATH:$GOPATH/bin"
 
 export NVM_DIR="$HOME/.nvm"
 . "/usr/local/opt/nvm/nvm.sh"

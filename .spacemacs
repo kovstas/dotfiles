@@ -52,7 +52,13 @@ values."
      syntax-checking
      version-control
 
-     c-c++
+     (c-c++
+      :variables
+      c-c++-enable-clang-support t
+      c-c++-enable-rtags-support t
+      c-c++-enable-google-style t
+      c-c++-enable-google-newline t
+      )
      clojure
      csv
      emacs-lisp
@@ -95,8 +101,6 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(nsis-mode
-                                      org-trello
-                                      org-alert
                                       all-the-icons)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -384,8 +388,66 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  (setq org-alert-enable t)
+  ;; For mac
+  (setq mac-option-key-is-meta nil)
+  (setq mac-command-key-is-meta t)
+  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier nil)
 
+  ;; Org mode
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" )
+          (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING")))
+
+  (setq org-todo-keyword-faces
+        '(("TODO" :foreground "red" :weight bold)
+          ("NEXT" :foreground "blue" :weight bold)
+          ("DONE" :foreground "forest green" :weight bold)
+          ("WAITING" :foreground "orange" :weight bold)
+          ("HOLD" :foreground "magenta" :weight bold)
+          ("CANCELLED" :foreground "forest green" :weight bold)
+          ("PHONE" :foreground "forest green" :weight bold)
+          ("MEETING" :foreground "forest green" :weight bold)))
+
+  (setq org-use-fast-todo-selection t)
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+  (setq org-todo-state-tags-triggers
+        '(("CANCELLED" ("CANCELLED" . t))
+          ("WAITING" ("WAITING" . t))
+          ("HOLD" ("WAITING") ("HOLD" . t))
+          (done ("WAITING") ("HOLD"))
+          ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+          ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+          ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
+
+  (global-set-key (kbd "C-c c") 'org-capture)
+
+  (setq org-directory "~/Dropbox/org")
+
+  (let ((default-directory org-directory))
+    (setq org-default-notes-file (expand-file-name "refile.org"))
+    (setq org-capture-templates
+        (quote (("t" "todo" entry (file org-default-notes-file)
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("r" "respond" entry (file org-default-notes-file)
+               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+                ("n" "note" entry (file org-default-notes-file)
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("j" "Journal" entry (file+datetree (expand-file-name "diary.org"))
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+                ("w" "org-protocol" entry (file org-default-notes-file)
+               "* TODO Review %c\n%U\n" :immediate-finish t)
+                ("m" "Meeting" entry (file org-default-notes-file)
+               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+                ("p" "Phone call" entry (file org-default-notes-file)
+               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+                ("h" "Habit" entry (file org-default-notes-file)
+               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))))
+
+
+
+  ;; Powerline
   (setq powerline-default-separator 'nil)
   (setq powerline-default-separator 'wave)
   (spaceline-helm-mode)
@@ -423,15 +485,7 @@ you should place your code here."
 
   (spaceline-toggle-org-pomodoro-on)
 
-  (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "|" "DONE" )))
 
-  (add-to-list 'auto-mode-alist '("\\.trello$" . org-mode))
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (let ((filename (buffer-file-name (current-buffer))))
-                (when (and filename (string= "trello" (file-name-extension filename)))
-                  (org-trello-mode)))))
 
 )
 
@@ -445,7 +499,7 @@ you should place your code here."
  '(org-trello-current-prefix-keybinding "C-c o")
  '(package-selected-packages
    (quote
-    (spotify helm-spotify multi zeal-at-point rainbow-mode rainbow-identifiers org-trello org-alert nsis-mode helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-hoogle helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag flyspell-correct-helm ghub let-alist color-identifiers-mode all-the-icons memoize font-lock+ ace-jump-helm-line yapfify yaml-mode xterm-color web-mode web-beautify unfill tagedit sql-indent smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder pyvenv pytest pyenv-mode py-isort pug-mode powershell pip-requirements pdf-tools pbcopy osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download noflet nginx-mode mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode live-py-mode less-css-mode launchctl js2-refactor js-doc jinja2-mode intero insert-shebang imenu-list idris-mode prop-menu hy-mode htmlize hlint-refactor hindent haskell-snippets haml-mode go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md geiser fuzzy flyspell-correct-ivy flyspell-correct flycheck-pos-tip pos-tip flycheck-haskell flycheck fish-mode evil-magit magit git-commit with-editor eshell-z eshell-prompt-extras esh-help ensime sbt-mode scala-mode emmet-mode ein skewer-mode request-deferred websocket deferred js2-mode simple-httpd dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat disaster diff-hl dash-at-point cython-mode csv-mode counsel-dash helm-dash company-web web-completion-data company-tern dash-functional tern company-statistics company-shell company-go go-mode company-ghci company-ghc ghc haskell-mode company-emacs-eclim eclim company-cabal company-c-headers company-auctex company-ansible company-anaconda company coffee-mode cmm-mode cmake-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg clang-format cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex-latexmk auctex ansible-doc ansible anaconda-mode pythonic ac-ispell auto-complete ws-butler winum wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link which-key undo-tree org-plus-contrib ivy hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
+    (org-mime helm-spotify-plus spotify helm-spotify multi zeal-at-point rainbow-mode rainbow-identifiers org-trello org-alert nsis-mode helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-hoogle helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag flyspell-correct-helm ghub let-alist color-identifiers-mode all-the-icons memoize font-lock+ ace-jump-helm-line yapfify yaml-mode xterm-color web-mode web-beautify unfill tagedit sql-indent smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder pyvenv pytest pyenv-mode py-isort pug-mode powershell pip-requirements pdf-tools pbcopy osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download noflet nginx-mode mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode live-py-mode less-css-mode launchctl js2-refactor js-doc jinja2-mode intero insert-shebang imenu-list idris-mode prop-menu hy-mode htmlize hlint-refactor hindent haskell-snippets haml-mode go-guru go-eldoc gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md geiser fuzzy flyspell-correct-ivy flyspell-correct flycheck-pos-tip pos-tip flycheck-haskell flycheck fish-mode evil-magit magit git-commit with-editor eshell-z eshell-prompt-extras esh-help ensime sbt-mode scala-mode emmet-mode ein skewer-mode request-deferred websocket deferred js2-mode simple-httpd dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat disaster diff-hl dash-at-point cython-mode csv-mode counsel-dash helm-dash company-web web-completion-data company-tern dash-functional tern company-statistics company-shell company-go go-mode company-ghci company-ghc ghc haskell-mode company-emacs-eclim eclim company-cabal company-c-headers company-auctex company-ansible company-anaconda company coffee-mode cmm-mode cmake-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg clang-format cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex-latexmk auctex ansible-doc ansible anaconda-mode pythonic ac-ispell auto-complete ws-butler winum wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg eval-sexp-fu highlight elisp-slime-nav dumb-jump popup diminish define-word counsel-projectile projectile pkg-info epl counsel swiper column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed ace-link which-key undo-tree org-plus-contrib ivy hydra evil-unimpaired f s dash async aggressive-indent adaptive-wrap ace-window avy))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
