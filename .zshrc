@@ -138,5 +138,16 @@ gitconfig () {
 # Work
 
 if [ -f ~/.work/init.sh ]; then
-    . ~/.work/init.sh
+    #. ~/.work/init.sh
 fi
+
+if [ -f ~/Go ]; then
+    `mkdir ~/Go`
+fi
+
+export GOPATH="$HOME/Go"
+export PATH="$PATH:$GOPATH/bin"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

@@ -52,7 +52,13 @@ values."
      syntax-checking
      version-control
 
-     (c-c++ :variables c-c++-enable-clang-support t)
+     (c-c++
+      :variables
+      c-c++-enable-clang-support t
+      c-c++-enable-rtags-support t
+      c-c++-enable-google-style t
+      c-c++-enable-google-newline t
+      )
      clojure
      csv
      emacs-lisp
@@ -95,8 +101,6 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(nsis-mode
-                                      org-trello
-                                      org-alert
                                       all-the-icons)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -384,8 +388,66 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  (setq org-alert-enable t)
+  ;; For mac
+  (setq mac-option-key-is-meta nil)
+  (setq mac-command-key-is-meta t)
+  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier nil)
 
+  ;; Org mode
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" )
+          (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING")))
+
+  (setq org-todo-keyword-faces
+        '(("TODO" :foreground "red" :weight bold)
+          ("NEXT" :foreground "blue" :weight bold)
+          ("DONE" :foreground "forest green" :weight bold)
+          ("WAITING" :foreground "orange" :weight bold)
+          ("HOLD" :foreground "magenta" :weight bold)
+          ("CANCELLED" :foreground "forest green" :weight bold)
+          ("PHONE" :foreground "forest green" :weight bold)
+          ("MEETING" :foreground "forest green" :weight bold)))
+
+  (setq org-use-fast-todo-selection t)
+  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+  (setq org-todo-state-tags-triggers
+        '(("CANCELLED" ("CANCELLED" . t))
+          ("WAITING" ("WAITING" . t))
+          ("HOLD" ("WAITING") ("HOLD" . t))
+          (done ("WAITING") ("HOLD"))
+          ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+          ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+          ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
+
+  (global-set-key (kbd "C-c c") 'org-capture)
+
+  (setq org-directory "~/Dropbox/org")
+
+  (let ((default-directory org-directory))
+    (setq org-default-notes-file (expand-file-name "refile.org"))
+    (setq org-capture-templates
+        (quote (("t" "todo" entry (file org-default-notes-file)
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("r" "respond" entry (file org-default-notes-file)
+               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+                ("n" "note" entry (file org-default-notes-file)
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("j" "Journal" entry (file+datetree (expand-file-name "diary.org"))
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+                ("w" "org-protocol" entry (file org-default-notes-file)
+               "* TODO Review %c\n%U\n" :immediate-finish t)
+                ("m" "Meeting" entry (file org-default-notes-file)
+               "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+                ("p" "Phone call" entry (file org-default-notes-file)
+               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+                ("h" "Habit" entry (file org-default-notes-file)
+               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))))
+
+
+
+  ;; Powerline
   (setq powerline-default-separator 'nil)
   (setq powerline-default-separator 'wave)
   (spaceline-helm-mode)
@@ -429,15 +491,7 @@ you should place your code here."
 
   (spaceline-toggle-org-pomodoro-on)
 
-  (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "|" "DONE" )))
 
-  (add-to-list 'auto-mode-alist '("\\.trello$" . org-mode))
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (let ((filename (buffer-file-name (current-buffer))))
-                (when (and filename (string= "trello" (file-name-extension filename)))
-                  (org-trello-mode)))))
 
 )
 
