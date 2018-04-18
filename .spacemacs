@@ -485,6 +485,10 @@ you should place your code here."
 
   (spaceline-toggle-org-pomodoro-on)
 
+  ;; Google Translate
+  (setq google-translate-default-source-language "en")
+  (setq google-translate-default-target-language "ru")
+  (global-set-key (kbd "C-x C-t") 'google-translate-at-point)
 
 
 )
