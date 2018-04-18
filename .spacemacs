@@ -424,6 +424,7 @@ you should place your code here."
   (global-set-key (kbd "C-c c") 'org-capture)
 
   (setq org-directory "~/Dropbox/org")
+  (setq org-agenda-files '("~/Dropbox/org"))
 
   (let ((default-directory org-directory))
     (setq org-default-notes-file (expand-file-name "refile.org"))
@@ -537,12 +538,6 @@ you should place your code here."
   (spaceline-emacs-theme 'date 'time)
 
   (setq create-lockfiles nil)
-
-  (setq org-agenda-files '("~/Dropbox/org/"
-                           "~/Dropbox/org/projects/planning/day-of-week-reports/"
-                           "~/Dropbox/org/projects/planning/weeks/"))
-  (setq diary-file "~/Dropbox/org/projects/planning/day.org")
-
 
   (display-time)
   (add-hook 'diary-hook 'appt-make-list)
