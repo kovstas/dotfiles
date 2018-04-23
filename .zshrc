@@ -99,6 +99,8 @@ extract () {
 # Function for git
 # -----------
 
+alias githr='git reset --hard HEAD'
+
 gitname () {
     gitconfig 'name' $1
 }
