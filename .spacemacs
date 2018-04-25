@@ -485,6 +485,8 @@ you should place your code here."
 (global-set-key (kbd "<f4>") 'pr/show-refile)
 (global-set-key (kbd "C-c w") 'org-refile)
 
+(org-defkey org-mode-map [(meta return)] 'org-meta-return)
+
 (defun pr/show-refile()
   "Go to refile"
   (interactive)
@@ -551,8 +553,8 @@ you should place your code here."
   (setq create-lockfiles nil)
 
   (display-time)
-  (add-hook 'diary-hook 'appt-make-list)
-  (diary 0)
+;;  (add-hook 'diary-hook 'appt-make-list)
+;;  (diary 0)
 
   (setq org-pomodoro-length 25)
   (setq org-pomodoro-short-break-length 5)
