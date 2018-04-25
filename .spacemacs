@@ -482,6 +482,7 @@ you should place your code here."
 (global-set-key (kbd "C-<f11>") 'org-clock-in)
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 (global-set-key (kbd "C-c c") 'org-capture)
+(org-defkey org-mode-map [(meta return)] 'org-meta-return)
 
 (defun bh/hide-other ()
   (interactive)
@@ -540,8 +541,8 @@ you should place your code here."
   (setq create-lockfiles nil)
 
   (display-time)
-  (add-hook 'diary-hook 'appt-make-list)
-  (diary 0)
+;;  (add-hook 'diary-hook 'appt-make-list)
+;;  (diary 0)
 
   (setq org-pomodoro-length 25)
   (setq org-pomodoro-short-break-length 5)
