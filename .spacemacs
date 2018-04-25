@@ -482,6 +482,14 @@ you should place your code here."
 (global-set-key (kbd "C-<f11>") 'org-clock-in)
 (global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 (global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "<f4>") 'pr/show-refile)
+(global-set-key (kbd "C-c w") 'org-refile)
+
+(defun pr/show-refile()
+  "Go to refile"
+  (interactive)
+  (switch-to-buffer
+   (find-file "~/Dropbox/org/refile.org")))
 
 (defun bh/hide-other ()
   (interactive)
@@ -509,6 +517,9 @@ you should place your code here."
 (defun bh/switch-to-scratch ()
   (interactive)
   (switch-to-buffer "*scratch*"))
+
+(setq org-refile-targets '((nil :maxlevel . 9)
+                           (org-agenda-files :maxlevel . 9)))
 
 
 
