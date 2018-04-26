@@ -520,6 +520,10 @@ you should place your code here."
   (interactive)
   (switch-to-buffer "*scratch*"))
 
+(advice-add 'org-refile :after
+            (lambda (&rest _)
+              (org-save-all-org-buffers)))
+
 (setq org-refile-targets '((nil :maxlevel . 9)
                            (org-agenda-files :maxlevel . 9)))
 
