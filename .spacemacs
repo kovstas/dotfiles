@@ -484,6 +484,7 @@ you should place your code here."
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "<f4>") 'pr/show-refile)
 (global-set-key (kbd "C-c w") 'org-refile)
+(global-set-key (kbd "C-=") 'er/expand-region)
 
 (org-defkey org-mode-map [(meta return)] 'org-meta-return)
 
