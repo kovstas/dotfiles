@@ -140,7 +140,7 @@ gitconfig () {
 # Work
 
 if [ -f ~/.work/init.sh ]; then
-    ~/.work/init.sh
+    source ~/.work/init.sh
 fi
 
 if [ -f ~/Go ]; then
