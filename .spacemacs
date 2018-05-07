@@ -1060,7 +1060,7 @@ A prefix arg forces clock in of the default task."
 (setq google-translate-default-source-language "en")
 (setq google-translate-default-target-language "ru")
 (global-set-key (kbd "C-x C-t") 'google-translate-at-point)
-(global-set-key (kbd "C-x C-T") 'google-translate-at-point-reverse)
+(global-set-key (kbd "C-x C-S-T") 'google-translate-at-point-reverse)
 
 
 )
