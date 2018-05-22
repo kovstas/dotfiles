@@ -101,7 +101,8 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(nsis-mode
-                                      all-the-icons)
+                                      all-the-icons,
+                                      real-auto-save)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -1061,6 +1062,9 @@ A prefix arg forces clock in of the default task."
 (setq google-translate-default-target-language "ru")
 (global-set-key (kbd "C-x C-t") 'google-translate-at-point)
 (global-set-key (kbd "C-x C-S-T") 'google-translate-at-point-reverse)
+
+(add-hook 'prog-mode-hook 'real-auto-save-mode)
+(setq real-auto-save-interval 5)
 
 
 )
