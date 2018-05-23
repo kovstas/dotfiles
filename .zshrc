@@ -99,7 +99,12 @@ extract () {
 # Function for git
 # -----------
 
+
 alias githr='git reset --hard HEAD'
+
+future-commit () {
+    git commit -m $1 --date "$(date -d +$2hours)"
+}
 
 gitname () {
     gitconfig 'name' $1
