@@ -142,6 +142,17 @@ gitconfig () {
     esac
 }
 
+vpn () {
+    if (systemctl -q is-active openvpn)
+    then
+	systemctl stop openvpn
+	echo "OpenVPN stopped"
+    else
+	systemctl start openvpn
+	echo "OpenVPN started"
+    fi
+}
+
 # Work
 
 if [ -f ~/.work/init.sh ]; then
