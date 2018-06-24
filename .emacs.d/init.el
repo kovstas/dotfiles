@@ -18,7 +18,6 @@
 
 (package-initialize)
 
-
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -33,7 +32,16 @@
   (quelpa-use-package-inhibit-loading-quelpa
    t "Improve startup performance"))
 
+(setq home-directory (getenv "HOME"))
+(defun at-homedir (&optional suffix)
+  (concat-normalize-slashes home-directory suffix))
+
+(defun at-org-dir (&optional suffix)
+  (concat-normalize-slashes (at-homedir "/Dropbox/org")
+                            suffix))
+
 (use-package cus-edit
+  :ensure nil
   :config
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
   (when (and custom-file (file-exists-p custom-file))
@@ -60,7 +68,6 @@
 
 
 (use-package font-lock+
-  :ensure t
   :quelpa
   (font-lock+ :repo "emacsmirror/font-lock-plus" :fetcher github))
 
@@ -337,7 +344,7 @@
   (google-translate-default-source-language "en")
   (google-translate-default-target-language "ru")
   :init
-  (use-package google-translate-default-ui))
+  (use-package google-translate-default-ui :ensure nil))
 
 
 ;; GC tweaks
@@ -363,7 +370,14 @@
   
   :mode ("\\.nginx'" . nginx-mode))
 
+(use-package paradox
+  :init
+  (setq paradox-github-token t)
+  (setq paradox-execute-asynchronously t)
+  (setq paradox-automatically-star t))
+
 (use-package scroll-bar
+  :ensure nil
   :config
   (scroll-bar-mode -1)
   (when (>= emacs-major-version 25)
@@ -482,6 +496,12 @@
   (magithub-feature-autoinject t))
 
 
+(use-package git-gutter
+  :delight
+  :config
+  (global-git-gutter-mode t))
+
+
 (use-package emms
   :bind (([f10] . emms))
   :init
@@ -494,8 +514,48 @@
   :config
   (tiny-setup-default))
 
+;; elisp
+(use-package edebug-x)
 
-)
+(use-package elisp-slime-nav
+  :delight elisp-slime-nav-mode
+  :hook ((emacs-lisp-mode-hook ielm-mode-hook) . elisp-slime-nav-mode))
+
+(use-package elisp-mode
+  :ensure nil
+  :hook ((emacs-lisp-mode-hook . (lambda ()
+                                   (auto-fill-mode 1)
+                                   (setq indent-tabs-mode nil)
+                                   (setq comment-start ";;")
+                                   (turn-on-eldoc-mode)))
+         (emacs-lisp-mode-hook . common-hooks/prog-helpers)
+         (emacs-lisp-mode-hook . common-hooks/newline-hook)))
+(use-package company-elisp
+  :ensure nil
+  :after (elisp-mode company)
+  :config
+  (add-to-list 'company-backends 'company-elisp))
+
+(add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode)
+
+(use-package paren
+  :defer 2
+  :custom
+  (show-paren-delay 0)
+  :config
+  (show-paren-mode t))
+
+
+(use-package org
+  :ensure org-plus-contrib
+  :after (f)
+  :mode (("\\.org$" . org-mode)
+         ("\\.org_archive$" . org-mode))
+
+  ;; Keyword
+  
+ 
 
 
 
