@@ -87,11 +87,16 @@
 
 (use-package spaceline-all-the-icons
   :after spaceline
+  :preface
+   (spaceline-define-segment date
+    "The current date."
+    (format-time-string "%h %d week %W"))
   :config
   (spaceline-all-the-icons-theme)
   (spaceline-all-the-icons--setup-package-updates)
   (spaceline-all-the-icons--setup-git-ahead)
   (spaceline-all-the-icons--setup-paradox)
+  (spaceline-toggle-battery-on)
   (spaceline-toggle-all-the-icons-nyan-cat-on))
 
 (use-package all-the-icons-ivy
@@ -293,11 +298,6 @@
   (golden-ratio-mode 1))
 
 
-(use-package org
-  
-  :mode ("\\.org\\'" . org-mode))
-
-
 (use-package markdown-mode
   
   :commands (markdown-mode gfm-mode)
@@ -455,6 +455,8 @@
   
   :custom
   (magit-completing-read-function 'ivy-completing-read "Force Ivy usage.")
+  (magit-stage-all-confirm nil)
+  (magit-unstage-all-confirm nil)
   :bind
   (:prefix-map magit-prefix-map
                :prefix "C-c m"
@@ -551,11 +553,70 @@
 (use-package org
   :ensure org-plus-contrib
   :after (f)
+  :bind (("C-c c" . org-capture)
+	 ("C-c w" . org-refile))
   :mode (("\\.org$" . org-mode)
          ("\\.org_archive$" . org-mode))
+  :config
 
   ;; Keyword
+  (setq org-todo-keywords '("BACKLOG(b)" "REPEAT(r)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"
+			    "|" "DONE(d!/@)" "CANCELLED(c@/!)"))
+  (setq org-todo-keywords-for-agenda '("BACKLOG(b)" "REPEAT(r)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"))
+  (setq org-done-keywords-for-agenda '("DONE(d)" "CANCELLED(c)"))
+
+  (setq org-todo-keyword-faces
+        '(("TODO" :foreground "red" :weight bold)
+          ("NEXT" :foreground "yellow" :weight bold)
+	  ("REPEAT" :foreground "purple" :weight bold)
+          ("BACKLOG" :foreground "blue" :weight bold)
+          ("WAITING" :foreground "magenta" :weight bold)
+	  ("DONE" :foreground "forest green" :weight bold)
+          ("CANCELLED" :foreground "forest green" :weight bold)))
+
+  (setq org-directory "~/Dropbox/org")
+  (setq org-agenda-files '("~/Dropbox/org"))
+
+  (let ((default-directory org-directory))
+    (setq org-default-notes-file (expand-file-name "refile.org"))
+    (setq org-capture-templates
+        (quote (("t" "todo" entry (file org-default-notes-file)
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("r" "respond" entry (file org-default-notes-file)
+               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+                ("n" "note" entry (file org-default-notes-file)
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("h" "REPEAT" entry (file org-default-notes-file)
+                 "* REPEAT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: REPEAT\n:END:\n")))))
+  (setq org-agenda-dim-blocked-tasks nil)
+  (setq org-agenda-compact-blocks t)
+  ;; Resume clocking task when emacs restarted
+  (org-clock-persistence-insinuate)
+  ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
+  (setq org-clock-history-length 23)
+  ;; Resume clocking task on clock-in if the clock is open
+  (setq org-clock-in-resume t)
+  ;; Change tasks to NEXT when clocking in
+  (setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+  ;; Separate drawers for clocking and logs
+  (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
+  ;; Save clock data and state changes and notes in the LOGBOOK drawer
+  (setq org-clock-into-drawer t)
+  ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+  (setq org-clock-out-remove-zero-time-clocks t)
+  ;; Clock out when moving task to a done state
+  (setq org-clock-out-when-done t)
+  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
+  (setq org-clock-persist t)
+  ;; Do not prompt to resume an active clock
+  (setq org-clock-persist-query-resume nil)
+  ;; Enable auto clock resolution for finding open clocks
+  (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+  ;; Include current clocking task in clock reports
+  (setq org-clock-report-include-clocking-task t)
+  (setq org-agenda-start-on-weekday 1)
   
+)
  
 
 
