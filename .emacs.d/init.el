@@ -552,9 +552,9 @@
 
 (use-package org
   :ensure org-plus-contrib
-  :after (f)
   :bind (("C-c c" . org-capture)
-	 ("C-c w" . org-refile))
+	 ("C-c w" . org-refile)
+	 ("C-c y" . org-yank))
   :mode (("\\.org$" . org-mode)
          ("\\.org_archive$" . org-mode))
   :config
