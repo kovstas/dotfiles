@@ -1,5 +1,8 @@
 ;; (setq debug-on-error t)
 ;; (setq debug-on-quit t)
+
+;; tern It's needed to create symlink (sudo ln -s ~/.nvm/versions/node/v8.11.1/bin/tern /usr/local/bin/tern)
+
 (setq message-log-max t)
 
 (require 'package)
@@ -40,6 +43,12 @@
 (defun at-org-dir (&optional suffix)
   (concat-normalize-slashes (at-homedir "/Dropbox/org")
                             suffix))
+
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
 
 (use-package cus-edit
   :ensure nil
@@ -203,9 +212,10 @@
   (add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
 (use-package company
-  
+  :init (global-company-mode)
   :config
-  (global-company-mode))
+   (define-key company-mode-map (kbd "M-j") 'company-select-next)
+   (define-key company-mode-map (kbd "M-k") 'company-select-previous))
 
 (use-package ivy
   
@@ -260,6 +270,8 @@
   :bind ("C-x j j" . 'counsel-projectile-switch-project)
   :config
   (setq projectile-switch-project-action 'counsel-projectile-switch-project))
+
+(use-package flycheck)
 
 (use-package ace-window
   
@@ -548,6 +560,87 @@
   (show-paren-delay 0)
   :config
   (show-paren-mode t))
+
+;; UI develop
+
+(use-package company-web
+  :config
+  (add-to-list 'company-backends 'company-web-html))
+
+(use-package lorem-ipsum)
+
+(use-package web-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-closing t)
+  (setq web-mode-enable-auto-expanding t)
+  (setq web-mode-enable-auto-opening t)
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-current-column-highlight t))
+
+
+(use-package emmet-mode
+  :config
+  (add-hook 'sgml-mode-hook 'emmet-mode)
+  (add-hook 'web-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook  'emmet-mode))
+
+
+(use-package js2-mode
+  :custom
+  (js-indent-level 4)
+  (js-switch-indent-offset 4)
+  (js2-bounce-indent-p t)
+  (js2-strict-missing-semi-warning nil)
+  (js2-missing-semi-one-line-override nil)
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+
+(use-package js2-refactor)
+
+;; JS interation
+(use-package js-comint
+  :config
+  (add-hook 'js2-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
+            (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
+            (local-set-key (kbd "C-c b") 'js-send-buffer)
+            (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
+            (local-set-key (kbd "C-c l") 'js-load-file-and-go))))
+
+;; JS autocomplete
+(use-package tern
+  :config
+  (setq tern-command (append tern-command '("--no-port-file")))
+  (add-hook 'js2-mode-hook (lambda ()
+			     (tern-mode)
+			     (company-mode))))
+
+(use-package company-tern
+  :ensure t
+  :config (progn
+	    (add-to-list 'company-backends 'company-tern)
+	    (setq company-tern-meta-as-single-line t)
+	    (setq company-tooltip-align-annotations t)))
+
+;; Js debuger
+(use-package indium
+  :commands (indium-interaction-mode)
+  :config
+  (add-hook 'js2-mode-hook #'indium-interaction-mode))
+
+(use-package skewer-mode)
+
+(use-package smartparens
+  :ensure t
+  :config
+  (add-hook 'lisp-mode-hook 'smartparens-strict-mode)
+  (add-hook 'emacs-lisp-mode-hook 'smartparens-strict-mode)
+  (add-hook 'json-mode-hook 'smartparens-mode)
+  (add-hook 'js2-mode-hook 'smartparens-mode))
 
 
 (use-package org
