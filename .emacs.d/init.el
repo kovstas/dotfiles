@@ -235,9 +235,9 @@
 (use-package counsel
   )
 
+(use-package docker :ensure t)
 
 (use-package dockerfile-mode
-  
   :mode  ("\\Dockerfile" . dockerfile-mode))
 
 (use-package docker-compose-mode
@@ -245,31 +245,26 @@
   :delight docker-compose-mode)
 
 (use-package projectile
-  
-  :bind ("C-x j j" . projectile-switch-project)
   :custom
-  (projectile-enable-caching t)
-  (projectile-require-project-root nil)
   (projectile-completion-system 'ivy)
-
   :config
-  (def-projectile-commander-method ?d
-    "Open project root in dired."
-    (projectile-dired))
-  (def-projectile-commander-method ?g
-    "Search in project."
-    (counsel-rg))
   (add-to-list 'projectile-other-file-alist '("html" "js"))
   (add-to-list 'projectile-other-file-alist '("js" "html"))
-  (setq projectile-switch-project-action 'projectile-commander)
-  (projectile-global-mode 1))
+  (projectile-mode))
 
 (use-package counsel-projectile
-  
-  :after (counsel projectile)
-  :bind ("C-x j j" . 'counsel-projectile-switch-project)
+  :after counsel projectile
   :config
-  (setq projectile-switch-project-action 'counsel-projectile-switch-project))
+  (counsel-projectile-mode))
+
+(use-package dumb-jump
+  :bind (("M-g o" . dumb-jump-go-other-window)
+         ("M-g j" . dumb-jump-go)
+         ("M-g i" . dumb-jump-go-prompt)
+         ("M-g x" . dumb-jump-go-prefer-external)
+         ("M-g z" . dumb-jump-go-prefer-external-other-window))
+  :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
+  :ensure)
 
 (use-package flycheck)
 
@@ -449,7 +444,6 @@
 
 
 (use-package tramp
-  
   :config
   (setq tramp-default-method "ssh")
   (setq tramp-ssh-controlmaster-options "")
@@ -637,11 +631,12 @@
 (use-package smartparens
   :ensure t
   :config
-  (add-hook 'lisp-mode-hook 'smartparens-strict-mode)
-  (add-hook 'emacs-lisp-mode-hook 'smartparens-strict-mode)
+  (add-hook 'lisp-mode-hook 'smartparens-mode)
+  (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
   (add-hook 'json-mode-hook 'smartparens-mode)
   (add-hook 'js2-mode-hook 'smartparens-mode))
 
+(use-package docker-tramp :ensure t)
 
 (use-package org
   :ensure org-plus-contrib
@@ -709,7 +704,11 @@
   (setq org-clock-report-include-clocking-task t)
   (setq org-agenda-start-on-weekday 1)
   
-)
+  )
+
+(use-package org-drill :ensure org-plus-contrib :after org)
+(use-package org-drill-table :ensure t :after org-drill)
+
  
 
 
