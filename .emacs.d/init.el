@@ -705,6 +705,8 @@
 (use-package org-drill :ensure org-plus-contrib :after org)
 (use-package org-drill-table :ensure t :after org-drill)
 
+(use-package (isolate :fetcher github :repo "casouri/isolate"))
+
  
 
 

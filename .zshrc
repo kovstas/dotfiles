@@ -101,10 +101,16 @@ extract () {
 
 
 alias githr='git reset --hard HEAD'
+alias clip='xclip -sel clip'
 
 future-commit () {
     git commit -m $1 --date "$(date -d +$2hours)"
 }
+
+jpid () {
+    ps -aux | grep java | grep $1 | awk '{ print $2 }'
+}
+
 
 gitname () {
     gitconfig 'name' $1
