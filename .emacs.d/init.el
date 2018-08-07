@@ -57,6 +57,14 @@
   (when (and custom-file (file-exists-p custom-file))
     (load-file custom-file)))
 
+(use-package real-auto-save
+  :ensure t
+  :init
+  (add-hook 'org-mode-hook 'real-auto-save-mode)
+  (add-hook 'prog-mode-hook 'real-auto-save-mode)
+  :config
+  (setq real-auto-save-interval 5))
+
 (use-package doom-themes
   :custom
   (doom-themes-enable-bold t)
