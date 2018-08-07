@@ -343,6 +343,9 @@
   :after (json-reformat json-snatcher)
   :mode ("\\.json$" . json-mode))
 
+;; (use-package multitran
+;;   :ensure t)
+
 (use-package google-translate
   
   :bind (("C-c C-t" . google-translate-at-point)
@@ -351,6 +354,8 @@
   :custom
   (google-translate-default-source-language "en")
   (google-translate-default-target-language "ru")
+  :config
+  (setq google-translate--tkk-url "https://translate.google.ru/")
   :init
   (use-package google-translate-default-ui :ensure nil))
 
