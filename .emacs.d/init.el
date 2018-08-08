@@ -66,10 +66,11 @@
   (setq real-auto-save-interval 5))
 
 (use-package doom-themes
+  :ensure t
   :custom
   (doom-themes-enable-bold t)
   :init
-  (load-theme 'doom-tomorrow-night))
+  (load-theme 'doom-one))
 
 (use-package nyan-mode
   :demand t
