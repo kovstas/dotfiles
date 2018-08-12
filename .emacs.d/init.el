@@ -659,15 +659,29 @@
   :ensure org-plus-contrib
   :bind (("C-c c" . org-capture)
 	 ("C-c w" . org-refile)
+	 ("<f12>" . org-agenda)
 	 ("C-c y" . org-yank))
   :mode (("\\.org$" . org-mode)
          ("\\.org_archive$" . org-mode))
   :config
 
+  ;; Common settings
+  (setq org-directory "~/Dropbox/org")
+  (setq org-agenda-files '("~/Dropbox/org"))
+
+  ;; Speed Commands
+  (setq org-use-speed-commands t)
+  (add-to-list 'org-speed-commands-user '("x" org-todo "DONE"))
+  (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
+  (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
+  (add-to-list 'org-speed-commands-user '("i" call-interactively 'org-clock-in))
+  (add-to-list 'org-speed-commands-user '("o" call-interactively 'org-clock-out))
+  (add-to-list 'org-speed-commands-user '("$" call-interactively 'org-archive-subtree))
+
   ;; Keyword
-  (setq org-todo-keywords '("BACKLOG(b)" "REPEAT(r)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"
+  (setq org-todo-keywords '("REPEAT(r)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"
 			    "|" "DONE(d!/@)" "CANCELLED(c@/!)"))
-  (setq org-todo-keywords-for-agenda '("BACKLOG(b)" "REPEAT(r)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"))
+  (setq org-todo-keywords-for-agenda '("REPEAT(r)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"))
   (setq org-done-keywords-for-agenda '("DONE(d)" "CANCELLED(c)"))
 
   (setq org-todo-keyword-faces
@@ -679,22 +693,22 @@
 	  ("DONE" :foreground "forest green" :weight bold)
           ("CANCELLED" :foreground "forest green" :weight bold)))
 
-  (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org"))
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
-  (setq org-refile-allow-creating-parent-nodes 'confirm)
-
   (let ((default-directory org-directory))
     (setq org-default-notes-file (expand-file-name "refile.org"))
     (setq org-capture-templates
         (quote (("t" "todo" entry (file org-default-notes-file)
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                ("r" "respond" entry (file org-default-notes-file)
-               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
                 ("n" "note" entry (file org-default-notes-file)
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                 ("h" "REPEAT" entry (file org-default-notes-file)
                  "* REPEAT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: REPEAT\n:END:\n")))))
+
+  ;; Refile
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 4)))
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-refile-use-outline-path 'file)
+  (setq org-completion-use-ido t)
+  (setq org-outline-path-complete-in-steps nil)
 
   ;; Agenda
   (setq org-agenda-dim-blocked-tasks nil)
@@ -716,8 +730,27 @@
   (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
   (setq org-clock-history-length 23)
   (setq org-clock-report-include-clocking-task t)
-  
+
+  ;; Nice tweaks
+  (setq org-blank-before-new-entry (quote ((heading) (plain-list-item))))
+  (setq org-enforce-todo-dependencies t)
+  (setq org-log-done (quote time))
+  (setq org-log-redeadline (quote time))
+  (setq org-log-reschedule (quote time))
+
   )
+
+(use-package org-alert
+  :ensure t
+  :config
+  (setq alert-default-style 'libnotify))
+
+(use-package russian-holidays
+  :ensure t
+  :after (org)
+  :config
+  (setq calendar-holidays
+   (push russian-holidays calendar-holidays)))
 
 (use-package org-drill :ensure org-plus-contrib :after org)
 (use-package org-drill-table :ensure t :after org-drill)
