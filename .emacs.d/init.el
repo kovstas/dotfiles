@@ -60,10 +60,13 @@
 (use-package real-auto-save
   :ensure t
   :init
+  (add-hook 'restclient-mode-hook 'real-auto-save-mode)
+  (add-hook 'markdown-mode 'real-auto-save-mode)
+  (add-hook 'apib-mode 'real-auto-save-mode)
   (add-hook 'org-mode-hook 'real-auto-save-mode)
   (add-hook 'prog-mode-hook 'real-auto-save-mode)
   :config
-  (setq real-auto-save-interval 5))
+  (setq real-auto-save-interval 10))
 
 (use-package doom-themes
   :ensure t
@@ -718,8 +721,6 @@
 
 (use-package org-drill :ensure org-plus-contrib :after org)
 (use-package org-drill-table :ensure t :after org-drill)
-
-(use-package (isolate :fetcher github :repo "casouri/isolate"))
 
  
 
