@@ -725,6 +725,13 @@
   (setq org-clock-persist t)
   (setq org-clock-out-when-done t)
   (setq org-clock-out-remove-zero-time-clocks t)
+  (defun bh/remove-empty-drawer-on-clock-out ()
+   (interactive)
+   (save-excursion
+     (beginning-of-line 0)
+     (org-remove-empty-drawer-at (point))))
+
+  (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
   (setq org-clock-into-drawer t)
   (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
   (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
