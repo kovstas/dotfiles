@@ -443,6 +443,7 @@
   :no-require t
   :defer 1
   :config
+  (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
   (recentf-mode t)
   :custom
   (recentf-max-saved-items 250)
@@ -450,13 +451,10 @@
 
 ;; Backup
 
-
 (use-package backup-each-save
-  
   :hook (after-save-hook . backup-each-save))
 
 (use-package backup-walker
-  
   :commands backup-walker-start)
 
 
@@ -464,15 +462,7 @@
   :config
   (setq tramp-default-method "ssh")
   (setq tramp-ssh-controlmaster-options "")
-  (setq tramp-default-proxies-alist nil)
-  (add-to-list 'tramp-default-proxies-alist
-               '(".*" "\\`.+\\'" "/ssh:%h:"))
-  (add-to-list 'tramp-default-proxies-alist
-               '(nil "\\`root\\'" "/ssh:%h:"))
-  (add-to-list 'tramp-default-proxies-alist
-               '("10\\.0\\." nil nil))
-  (add-to-list 'tramp-default-proxies-alist
-               `((regexp-quote ,(system-name)) nil nil)))
+  (setq tramp-default-proxies-alist nil))
 
 (use-package magit
   
@@ -655,6 +645,19 @@
 
 (use-package docker-tramp :ensure t)
 
+(use-package epa
+  :after (epg)
+  :config
+  (epa-file-enable)
+  :custom
+  (epa-pinetry-mode 'loopback))
+
+;; (use-package epg-config
+;;   :after (epg)
+;;   :custom
+;;   (epg-gpg-program "gpg2")
+;;   (epg-gpg-home-directory "~/.gnupg"))
+
 (use-package org
   :ensure org-plus-contrib
   :bind (("C-c c" . org-capture)
@@ -751,13 +754,6 @@
   :ensure t
   :config
   (setq alert-default-style 'libnotify))
-
-(use-package russian-holidays
-  :ensure t
-  :after (org)
-  :config
-  (setq calendar-holidays
-   (push russian-holidays calendar-holidays)))
 
 (use-package org-drill :ensure org-plus-contrib :after org)
 (use-package org-drill-table :ensure t :after org-drill)
