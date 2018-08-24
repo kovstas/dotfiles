@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: MC sprint
+# key: mcsk
+# --
+
+$0** Sprint ${1:number} (${2:start} - ${3:end})
+#+BEGIN: clocktable :scope file :maxlevel 4 :block today :compact t
+#+END:
+
+*** Tasks
+*** Time report
+#+BEGIN: clocktable :scope file :maxlevel 4 :tstart "<$2>" :tend "<$3>" :stepskip0 t :compact t
+#+END:
+*** Notes
+*** Conclusions

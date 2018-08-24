@@ -68,6 +68,20 @@
   :config
   (setq real-auto-save-interval 10))
 
+(use-package which-key
+  :ensure t
+  :init
+  (which-key-mode)
+  :config
+  :config
+  (which-key-setup-side-window-bottom)
+  (setq which-key-sort-order 'which-key-key-order-alpha
+        which-key-side-window-max-width 0.33
+        which-key-idle-delay 0.05)
+  :diminish which-key-mode
+  )
+
+
 (use-package doom-themes
   :ensure t
   :custom
@@ -229,13 +243,46 @@
    (define-key company-mode-map (kbd "M-j") 'company-select-next)
    (define-key company-mode-map (kbd "M-k") 'company-select-previous))
 
+(use-package yasnippet
+  :ensure t
+  :after t
+  :config
+  (yas-global-mode 1)
+  )
+
+(use-package yasnippet-snippets
+  :ensure t
+  :after yasnippet
+  )
+
+(use-package auto-yasnippet
+  :ensure t
+  :after yasnippet
+  :commands
+  (aya-create
+   aya-expand
+   aya-open-line)
+  )
+
+(defvar company-mode/enable-yas t
+  "Enable yasnippet for all backends.")
+
+(defun company-mode/backend-with-yas (backend)
+  (if (or (not company-mode/enable-yas)
+          (and (listp backend) (member 'company-yasnippet backend)))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))
+
+(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
 (use-package ivy
-  
   :delight ivy-mode
   :config
   (ivy-mode 1)
   :custom
   (ivy-use-virtual-buffers t)
+  (ivy-height 10)
   (ivy-count-format "(%d/%d)"))
 
 (use-package swiper
@@ -460,6 +507,7 @@
 
 (use-package tramp
   :config
+  (setq tramp-verbose 0)
   (setq tramp-default-method "ssh")
   (setq tramp-ssh-controlmaster-options "")
   (setq tramp-default-proxies-alist nil))

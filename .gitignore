@@ -6,6 +6,7 @@
 !/.tmux
 !/.emacs.d
 !/.emacs.d/init.el
+!/.emacs.d/snippets
 !.gitignore
 !.spacemacs
 !.zshrc
