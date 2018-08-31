@@ -307,6 +307,7 @@
   :custom
   (projectile-completion-system 'ivy)
   :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (add-to-list 'projectile-other-file-alist '("html" "js"))
   (add-to-list 'projectile-other-file-alist '("js" "html"))
   (projectile-mode))
