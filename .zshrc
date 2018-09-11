@@ -101,7 +101,14 @@ extract () {
 
 
 alias githr='git reset --hard HEAD'
-alias clip='xclip -sel clip'
+
+clip () {
+    if [[ "$(uname)" =~ Darwin ]]; then 
+	pbcopy 
+    else 
+	xclip -sel clip
+    fi
+}
 
 future-commit () {
     git commit -m $1 --date "$(date -d +$2hours)"
