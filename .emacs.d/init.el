@@ -226,7 +226,7 @@
 (use-package emacs
   :config
   (fset 'yes-or-no-p 'y-or-n-p)
-  (set-default-font "PragmataPro 14")
+  (set-default-font "Monoid 12")
   (tool-bar-mode -1)
   (setq create-lockfiles nil)  
   (setq inhibit-startup-screen t)
@@ -235,6 +235,13 @@
   (setq backup-by-copying t)
   (setq warning-minimum-level :emergency)
   (setq default-input-method 'russian-computer)
+
+  ;; For mac
+  (setq mac-option-key-is-meta nil)
+  (setq mac-command-key-is-meta t)
+  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier nil)
+  
   (add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
 (use-package company
