@@ -724,10 +724,13 @@
   ;; Speed Commands
   (setq org-use-speed-commands t)
   (add-to-list 'org-speed-commands-user '("x" org-todo "DONE"))
-  (add-to-list 'org-speed-commands-user '("y" org-todo-yesterday "DONE"))
+  (add-to-list 'org-speed-commands-user '("ч" org-todo "DONE"))
   (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
+  (add-to-list 'org-speed-commands-user '("ы" call-interactively 'org-schedule))
   (add-to-list 'org-speed-commands-user '("i" call-interactively 'org-clock-in))
+  (add-to-list 'org-speed-commands-user '("ш" call-interactively 'org-clock-in))
   (add-to-list 'org-speed-commands-user '("o" call-interactively 'org-clock-out))
+  (add-to-list 'org-speed-commands-user '("щ" call-interactively 'org-clock-out))
   (add-to-list 'org-speed-commands-user '("$" call-interactively 'org-archive-subtree))
 
   ;; Keyword
@@ -773,7 +776,7 @@
   ;; Clocking
   (org-clock-persistence-insinuate)
   (setq org-clock-in-resume t)
-  (setq org-clock-in-switch-to-state "NEXT")
+  (setq org-clock-in-switch-to-state 'me/clock-in)
   (setq org-clock-persist t)
   (setq org-clock-out-when-done t)
   (setq org-clock-out-remove-zero-time-clocks t)
@@ -797,7 +800,14 @@
   (setq org-log-redeadline (quote time))
   (setq org-log-reschedule (quote time))
 
-  )
+  ;; Custom functions
+
+  (defun me/clock-in(kw)
+    "Switch task to NEXT from TODO when clocking in. Skip caphure"
+    (if (not (bound-and-true-p org-capture-mode))
+	"NEXT")
+    )
+ )
 
 (use-package org-alert
   :ensure t
