@@ -57,6 +57,22 @@
   (when (and custom-file (file-exists-p custom-file))
     (load-file custom-file)))
 
+;; Security
+(use-package auth-source
+  :ensure t
+  :custom
+  (auth-sources '("~/.authinfo.gpg")))
+
+(use-package epa
+  :ensure t
+  :custom
+  (epg-gpg-program "gpg")
+  (epa-pinentry-mode nil))
+
+;; (use-package 1pass
+;;  :quelpa
+;;  (1pass :repo "dcreemer/1pass" :fetcher github))
+
 (use-package real-auto-save
   :ensure t
   :init

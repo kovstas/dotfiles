@@ -1,14 +1,19 @@
 # Ignore all
 /*
 /.emacs.d/*
+/.gnupg/*
 
 # Exclude
 !/.tmux
 !/.emacs.d
 !/.emacs.d/init.el
 !/.emacs.d/snippets
+!/.gnupg
+!/.gnupg/gpg-agent.conf
+!/.gnupg/gpg.conf
 !.gitignore
 !.spacemacs
 !.zshrc
+!.gitignore_global
 !.tmux.conf*
 
