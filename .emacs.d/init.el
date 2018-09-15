@@ -41,7 +41,7 @@
   (concat-normalize-slashes home-directory suffix))
 
 (defun at-org-dir (&optional suffix)
-  (concat-normalize-slashes (at-homedir "/Dropbox/org")
+  (concat-normalize-slashes (at-homedir "/org")
                             suffix))
 
 (use-package exec-path-from-shell
@@ -741,8 +741,8 @@
   :config
 
   ;; Common settings
-  (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org"))
+  (setq org-directory "~/org")
+  (setq org-agenda-files '("~/org"))
 
   ;; Speed Commands
   (setq org-use-speed-commands t)
@@ -792,6 +792,10 @@
   (setq org-agenda-dim-blocked-tasks nil)
   (setq org-agenda-compact-blocks t)
   (setq org-agenda-start-on-weekday 1)
+  (unless (string-match-p "\\.gpg" org-agenda-file-regexp)
+  (setq org-agenda-file-regexp
+        (replace-regexp-in-string "\\\\\\.org" "\\\\.org\\\\(\\\\.gpg\\\\)?"
+                                  org-agenda-file-regexp)))
 
   ;; Calendar
   (setq calendar-date-style 'european)

@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: MC sprint
-# key: mcsk
+# key: mcs
 # --
 
 $0** Sprint ${1:number} (${2:start} - ${3:end})
