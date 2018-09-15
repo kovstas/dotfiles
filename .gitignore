@@ -2,6 +2,8 @@
 /*
 /.emacs.d/*
 /.gnupg/*
+/Library/*
+/Library/LaunchAgents/*
 
 # Exclude
 !/.tmux
@@ -16,4 +18,6 @@
 !.zshrc
 !.gitignore_global
 !.tmux.conf*
-
+!/Library/
+!/Library/LaunchAgents/
+!/Library/LaunchAgents/me.peproll.backup.notes.plist 
