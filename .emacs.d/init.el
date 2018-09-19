@@ -264,7 +264,11 @@
   :init (global-company-mode)
   :config
    (define-key company-mode-map (kbd "M-j") 'company-select-next)
-   (define-key company-mode-map (kbd "M-k") 'company-select-previous))
+   (define-key company-mode-map (kbd "M-k") 'company-select-previous)
+   (use-package company-anaconda
+    :ensure t
+    :init (add-to-list 'company-backends 'company-anaconda))
+   )
 
 (use-package yasnippet
   :ensure t
@@ -348,8 +352,6 @@
          ("M-g z" . dumb-jump-go-prefer-external-other-window))
   :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
   :ensure)
-
-(use-package flycheck)
 
 (use-package ace-window
   
@@ -844,9 +846,43 @@
 (use-package org-drill :ensure org-plus-contrib :after org)
 (use-package org-drill-table :ensure t :after org-drill)
 
- 
+;; Code Lint and Spell Check
+(use-package flycheck-pos-tip :ensure t)
+(use-package flycheck
+  :ensure t
+  :commands global-flycheck-mode
+  :init (global-flycheck-mode)
+  :config (progn
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (setq flycheck-standard-error-navigation nil)
+    ;; flycheck errors on a tooltip (doesnt work on console)
+    (when (display-graphic-p (selected-frame))
+      (eval-after-load 'flycheck
+        '(custom-set-variables
+        '(flycheck-display-errors-function
+          #'flycheck-pos-tip-error-messages))))))
+
+(use-package python
+  :ensure t
+  :mode ("\\.py$" . python-mode)
+  :interpreter ("python" . python-mode)
+  :config
+  (use-package pyenv-mode
+    :ensure t)
+  (use-package anaconda-mode
+    :ensure t
+    :init (add-hook 'python-mode-hook 'anaconda-mode))
+  (use-package virtualenvwrapper
+    :init (add-hook 'python-mode-hook
+                    (lambda ()
+                      (hack-local-variables)
+                      (when (boundp 'project-venv-name)
+                        (venv-workon project-venv-name))))
+    :ensure t
+    :config
+    (venv-initialize-eshell)
+    (venv-initialize-interactive-shells)
+    (setq venv-location "~/.virtualenvs/")))
 
 
-
-;; (setq debug-on-error nil)
-;; (setq debug-on-quit nil)
+(modify-coding-system-alist 'file "\\.txt\\'" 'windows-1251)
