@@ -101,6 +101,8 @@ extract () {
 
 
 alias githr='git reset --hard HEAD'
+alias sshrestart='sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist && sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist'
+alias sshlist='sudo lsof -i -n | egrep '\<ssh\>''
 
 clip () {
     if [[ "$(uname)" =~ Darwin ]]; then 
@@ -155,16 +157,7 @@ gitconfig () {
     esac
 }
 
-vpn () {
-    if (systemctl -q is-active openvpn)
-    then
-	systemctl stop openvpn
-	echo "OpenVPN stopped"
-    else
-	systemctl start openvpn
-	echo "OpenVPN started"
-    fi
-}
+eval "$(pyenv init -)"
 
 # Work
 
@@ -183,4 +176,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+export PATH=/usr/local/anaconda3/bin:"$PATH"
 export PATH="$PATH:$HOME/.rvm/bin:$HOME/.local/bin"
