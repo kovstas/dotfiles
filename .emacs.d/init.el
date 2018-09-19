@@ -433,14 +433,11 @@
 
 (use-package google-translate
   
-  :bind (("C-c C-t" . google-translate-at-point)
-	 ("C-c C-r" . google-translate-at-point-reverse)
-	 ("C-c C-S-t" . google-translate-at-point))
+  :bind (("C-x C-t" . google-translate-at-point)
+	 ("C-x C-r" . google-translate-at-point-reverse))
   :custom
   (google-translate-default-source-language "en")
   (google-translate-default-target-language "ru")
-  :config
-  (setq google-translate--tkk-url "https://translate.google.ru/")
   :init
   (use-package google-translate-default-ui :ensure nil))
 
@@ -461,6 +458,7 @@
 ;; UI
 
 (use-package battery
+  :ensure t
   :config
   (display-battery-mode 1))
 
@@ -750,8 +748,14 @@
   (setq org-use-speed-commands t)
   (add-to-list 'org-speed-commands-user '("x" org-todo "DONE"))
   (add-to-list 'org-speed-commands-user '("ч" org-todo "DONE"))
+  (add-to-list 'org-speed-commands-user '("t" org-todo "TODO"))
+  (add-to-list 'org-speed-commands-user '("е" org-todo "TODO"))
+  (add-to-list 'org-speed-commands-user '("w" org-todo "WAITING"))
+  (add-to-list 'org-speed-commands-user '("ц" org-todo "WAITING"))
   (add-to-list 'org-speed-commands-user '("s" call-interactively 'org-schedule))
   (add-to-list 'org-speed-commands-user '("ы" call-interactively 'org-schedule))
+  (add-to-list 'org-speed-commands-user '("d" call-interactively 'org-deadline))
+  (add-to-list 'org-speed-commands-user '("в" call-interactively 'org-deadline))
   (add-to-list 'org-speed-commands-user '("i" call-interactively 'org-clock-in))
   (add-to-list 'org-speed-commands-user '("ш" call-interactively 'org-clock-in))
   (add-to-list 'org-speed-commands-user '("o" call-interactively 'org-clock-out))
@@ -759,9 +763,9 @@
   (add-to-list 'org-speed-commands-user '("$" call-interactively 'org-archive-subtree))
 
   ;; Keyword
-  (setq org-todo-keywords '("REPEAT(r)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"
+  (setq org-todo-keywords '("REPEAT(r)" "TODO(t!)" "BACKLOG(b!)" "NEXT(n)" "WAITING(w@/!)"
 			    "|" "DONE(d!/@)" "CANCELLED(c@/!)"))
-  (setq org-todo-keywords-for-agenda '("REPEAT(r)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"))
+  (setq org-todo-keywords-for-agenda '("REPEAT(r)" "TODO(t!)" "BACKLOG(b!)" "NEXT(n)" "WAITING(w@/!)"))
   (setq org-done-keywords-for-agenda '("DONE(d)" "CANCELLED(c)"))
 
   (setq org-todo-keyword-faces
@@ -777,7 +781,13 @@
     (setq org-default-notes-file (expand-file-name "refile.org"))
     (setq org-capture-templates
         (quote (("t" "todo" entry (file org-default-notes-file)
-               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+		 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+		("r" "review" entry (file org-default-notes-file)
+		 "* TODO %? :REVIEW:\n%U\n%a\n" :clock-in t :clock-resume t)
+		("b" "backlog" entry (file org-default-notes-file)
+		 "* BACKLOG %?\n%U\n%a\n" :clock-in t :clock-resume t)
+		("i" "idea" entry (file "ideas.org.gpg")
+		 "* %? :IDEA:\n%U\n%a\n" :clock-in t :clock-resume t)
                 ("n" "note" entry (file org-default-notes-file)
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                 ("h" "REPEAT" entry (file org-default-notes-file)
