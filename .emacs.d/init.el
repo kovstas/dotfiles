@@ -856,6 +856,12 @@
 (use-package org-drill :ensure org-plus-contrib :after org)
 (use-package org-drill-table :ensure t :after org-drill)
 
+(use-package org-super-agenda
+  :ensure t
+  :after org
+  :config
+  (org-super-agenda-mode 1))
+
 ;; Code Lint and Spell Check
 (use-package flycheck-pos-tip :ensure t)
 (use-package flycheck

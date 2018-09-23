@@ -102,7 +102,7 @@ extract () {
 
 alias githr='git reset --hard HEAD'
 alias sshrestart='sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist && sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist'
-alias sshlist='sudo lsof -i -n | egrep '\<ssh\>''
+alias sshlist='sudo lsof -i -n | grep ssh'
 
 clip () {
     if [[ "$(uname)" =~ Darwin ]]; then 
