@@ -636,30 +636,122 @@
 
 ;; UI develop
 
-(use-package company-web
+;; (use-package web-mode
+;;   :bind (("C-c ]" . emmet-next-edit-point)
+;;          ("C-c [" . emmet-prev-edit-point)
+;;          ("C-c o" . browse-url-of-file)
+;; 	 ("C-c r" . web-mode-element-rename)
+;; 	 ("C-c /" . web-mode-element-close))
+;;   :mode
+;;   (("\\.js\\'" . web-mode)
+;;    ("\\.html?\\'" . web-mode)
+;;    ("\\.phtml?\\'" . web-mode)
+;;    ("\\.tpl\\.php\\'" . web-mode)
+;;    ("\\.[agj]sp\\'" . web-mode)
+;;    ("\\.as[cp]x\\'" . web-mode)
+;;    ("\\.erb\\'" . web-mode)
+;;    ("\\.hbs\\'" . web-mode)
+;;    ("\\.mustache\\'" . web-mode)
+;;    ("\\.djhtml\\'" . web-mode)
+;;    ("\\.vue$" . web-mode)
+;;    ("\\.jsx$" . web-mode))
+
+;;   :config
+;;   (flycheck-add-mode 'javascript-eslint 'web-mode)
+
+;;   ;; highlight enclosing tags of the element under cursor
+;;   (setq web-mode-enable-current-element-highlight t)
+
+;;   ;; editing enhancements for web-mode
+;;   (use-package web-mode-edit-element
+;;     :config (add-hook 'web-mode-hook 'web-mode-edit-element-minor-mode))
+
+;;   ;; snippets for HTML
+;;   (use-package emmet-mode
+;;     :init (setq emmet-move-cursor-between-quotes t) ;; default nil
+;;     :diminish (emmet-mode . " e"))
+;;   (add-hook 'web-mode-hook 'emmet-mode)
+
+;;   (defun my-web-mode-hook ()
+;;     "Hook for `web-mode' config for company-backends."
+;;     (set (make-local-variable 'company-backends)
+;;          '((company-tern company-css company-web-html company-files))))
+;;   (add-hook 'web-mode-hook 'my-web-mode-hook)
+
+;;   ;; Enable JavaScript completion between <script>...</script> etc.
+;;   (defadvice company-tern (before web-mode-set-up-ac-sources activate)
+;;     "Set `tern-mode' based on current language before running company-tern."
+;;     (if (equal major-mode 'web-mode)
+;; 	(let ((web-mode-cur-language
+;; 	       (web-mode-language-at-pos)))
+;; 	  (if (or (string= web-mode-cur-language "javascript")
+;; 		  (string= web-mode-cur-language "jsx"))
+;; 	      (unless tern-mode (tern-mode))
+;; 	    (if tern-mode (tern-mode -1))))))
+
+;;   (add-hook 'web-mode-hook 'company-mode)
+
+;;   (use-package sass-mode
+;;     :ensure t
+;;     :mode "\\.scss\\'")
+
+;;   ;; to get completion for HTML stuff
+;;   (use-package company-web)
+;;   (add-hook 'web-mode-hook 'company-mode))
+
+;; ;; configure CSS mode company backends
+;; (use-package css-mode
+;;   :config
+;;   (defun my-css-mode-hook ()
+;;     (set (make-local-variable 'company-backends)
+;;          '((company-css company-dabbrev-code company-files))))
+;;   (add-hook 'css-mode-hook 'my-css-mode-hook)
+;;   (add-hook 'css-mode-hook 'company-mode))
+
+;; npm i -g vscode-css-languageserver-bin
+(use-package css-mode
+  :ensure t
+  :init (setq css-indent-offset 2))
+
+(use-package css-eldoc
+  :ensure t
+  :commands turn-on-css-eldoc
+  :hook (css-mode . turn-on-css-eldoc))
+
+(use-package lsp-css
+  :ensure t
+  :commands lsp-css-enable
+  :hook (css-mode . lsp-css-enable))
+
+;; npm i -g vscode-html-languageserver-bin
+(use-package lsp-html
+  :ensure t
+  :commands lsp-html-enable
+  :hook (html-mode . lsp-html-enable))
+
+ (use-package zencoding-mode
+    :config
+    (defun configure-web-zencoding-mode ()
+      (require 'zencoding-mode)
+      (zencoding-mode t))
+    (add-hook 'html-mode-hook 'configure-web-zencoding-mode))
+
+(use-package rainbow-mode
+  :ensure t
+  :defer 5
+  :diminish rainbow-mode
   :config
-  (add-to-list 'company-backends 'company-web-html))
+  (add-hook 'css-mode-hook 'rainbow-mode)
+  (add-hook 'web-mode-hook 'rainbow-mode))
+
+;; impatient mode - Live refresh of web pages
+;; https://github.com/skeeto/impatient-mode
+(use-package impatient-mode
+  :diminish (impatient-mode . " i")
+  :commands (impatient-mode))
+
 
 (use-package lorem-ipsum)
-
-(use-package web-mode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-  (setq web-mode-enable-auto-pairing t)
-  (setq web-mode-enable-auto-closing t)
-  (setq web-mode-enable-auto-expanding t)
-  (setq web-mode-enable-auto-opening t)
-  (setq web-mode-enable-css-colorization t)
-  (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-current-column-highlight t))
-
-
-(use-package emmet-mode
-  :config
-  (add-hook 'sgml-mode-hook 'emmet-mode)
-  (add-hook 'web-mode-hook 'emmet-mode)
-  (add-hook 'css-mode-hook  'emmet-mode))
-
 
 (use-package js2-mode
   :custom
@@ -808,7 +900,6 @@
   (setq org-agenda-file-regexp
         (replace-regexp-in-string "\\\\\\.org" "\\\\.org\\\\(\\\\.gpg\\\\)?"
                                   org-agenda-file-regexp)))
-
   ;; Calendar
   (setq calendar-date-style 'european)
 
@@ -862,43 +953,37 @@
   :config
   (org-super-agenda-mode 1))
 
-;; Code Lint and Spell Check
-(use-package flycheck-pos-tip :ensure t)
-(use-package flycheck
+(use-package lsp-mode
   :ensure t
-  :commands global-flycheck-mode
-  :init (global-flycheck-mode)
-  :config (progn
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    (setq flycheck-standard-error-navigation nil)
-    ;; flycheck errors on a tooltip (doesnt work on console)
-    (when (display-graphic-p (selected-frame))
-      (eval-after-load 'flycheck
-        '(custom-set-variables
-        '(flycheck-display-errors-function
-          #'flycheck-pos-tip-error-messages))))))
-
-(use-package python
-  :ensure t
-  :mode ("\\.py$" . python-mode)
-  :interpreter ("python" . python-mode)
   :config
-  (use-package pyenv-mode
-    :ensure t)
-  (use-package anaconda-mode
-    :ensure t
-    :init (add-hook 'python-mode-hook 'anaconda-mode))
-  (use-package virtualenvwrapper
-    :init (add-hook 'python-mode-hook
-                    (lambda ()
-                      (hack-local-variables)
-                      (when (boundp 'project-venv-name)
-                        (venv-workon project-venv-name))))
+  (require 'lsp-imenu)
+  (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
+  
+  (lsp-define-stdio-client lsp-python "python"
+                           #'projectile-project-root
+                           '("pyls"))
+
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (lsp-python-enable)))
+
+  (use-package lsp-ui
     :ensure t
     :config
-    (venv-initialize-eshell)
-    (venv-initialize-interactive-shells)
-    (setq venv-location "~/.virtualenvs/")))
+    (setq lsp-ui-sideline-ignore-duplicate t)
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+  (use-package company-lsp
+    :config
+    (push 'company-lsp company-backends))
+
+  (defun lsp-set-cfg ()
+    (let ((lsp-cfg `(:pyls (:configurationSources ("flake8")))))
+      ;; TODO: check lsp--cur-workspace here to decide per server / project
+      (lsp--set-configuration lsp-cfg)))
+
+  (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
+  )
 
 
 (modify-coding-system-alist 'file "\\.txt\\'" 'windows-1251)
