@@ -1,8 +1,6 @@
 ;; (setq debug-on-error t)
 ;; (setq debug-on-quit t)
 
-;; tern It's needed to create symlink (sudo ln -s ~/.nvm/versions/node/v8.11.1/bin/tern /usr/local/bin/tern)
-
 (setq message-log-max t)
 
 (require 'package)
@@ -62,16 +60,6 @@
   :ensure t
   :custom
   (auth-sources '("~/.authinfo.gpg")))
-
-(use-package epa
-  :ensure t
-  :custom
-  (epg-gpg-program "gpg")
-  (epa-pinentry-mode nil))
-
-;; (use-package 1pass
-;;  :quelpa
-;;  (1pass :repo "dcreemer/1pass" :fetcher github))
 
 (use-package real-auto-save
   :ensure t
@@ -272,10 +260,13 @@
 
 (use-package yasnippet
   :ensure t
-  :after t
+  :after (org)
   :config
   (yas-global-mode 1)
-  )
+  (defun my-org-mode-hook ()
+    (yas-minor-mode))
+  (add-hook 'org-mode-hook #'my-org-mode-hook)
+)
 
 (use-package yasnippet-snippets
   :ensure t
@@ -288,8 +279,7 @@
   :commands
   (aya-create
    aya-expand
-   aya-open-line)
-  )
+   aya-open-line))
 
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
@@ -312,8 +302,7 @@
   (ivy-height 10)
   (ivy-count-format "(%d/%d)"))
 
-(use-package swiper
-  
+(use-package swiper  
   :bind ("C-s" . swiper)
   :custom
   (swiper-include-line-number-in-search t))
@@ -583,20 +572,10 @@
   :config
   (magithub-feature-autoinject t))
 
-
 (use-package git-gutter
   :delight
   :config
   (global-git-gutter-mode t))
-
-
-(use-package emms
-  :bind (([f10] . emms))
-  :init
-  (add-to-list 'load-path "~/.emacs.d/emms/")
-    (require 'emms-setup)
-    (emms-all)
-    (emms-default-players))
 
 (use-package tiny
   :config
@@ -634,170 +613,9 @@
   :config
   (show-paren-mode t))
 
-;; UI develop
+(use-package flycheck
+  :ensure t)
 
-;; (use-package web-mode
-;;   :bind (("C-c ]" . emmet-next-edit-point)
-;;          ("C-c [" . emmet-prev-edit-point)
-;;          ("C-c o" . browse-url-of-file)
-;; 	 ("C-c r" . web-mode-element-rename)
-;; 	 ("C-c /" . web-mode-element-close))
-;;   :mode
-;;   (("\\.js\\'" . web-mode)
-;;    ("\\.html?\\'" . web-mode)
-;;    ("\\.phtml?\\'" . web-mode)
-;;    ("\\.tpl\\.php\\'" . web-mode)
-;;    ("\\.[agj]sp\\'" . web-mode)
-;;    ("\\.as[cp]x\\'" . web-mode)
-;;    ("\\.erb\\'" . web-mode)
-;;    ("\\.hbs\\'" . web-mode)
-;;    ("\\.mustache\\'" . web-mode)
-;;    ("\\.djhtml\\'" . web-mode)
-;;    ("\\.vue$" . web-mode)
-;;    ("\\.jsx$" . web-mode))
-
-;;   :config
-;;   (flycheck-add-mode 'javascript-eslint 'web-mode)
-
-;;   ;; highlight enclosing tags of the element under cursor
-;;   (setq web-mode-enable-current-element-highlight t)
-
-;;   ;; editing enhancements for web-mode
-;;   (use-package web-mode-edit-element
-;;     :config (add-hook 'web-mode-hook 'web-mode-edit-element-minor-mode))
-
-;;   ;; snippets for HTML
-;;   (use-package emmet-mode
-;;     :init (setq emmet-move-cursor-between-quotes t) ;; default nil
-;;     :diminish (emmet-mode . " e"))
-;;   (add-hook 'web-mode-hook 'emmet-mode)
-
-;;   (defun my-web-mode-hook ()
-;;     "Hook for `web-mode' config for company-backends."
-;;     (set (make-local-variable 'company-backends)
-;;          '((company-tern company-css company-web-html company-files))))
-;;   (add-hook 'web-mode-hook 'my-web-mode-hook)
-
-;;   ;; Enable JavaScript completion between <script>...</script> etc.
-;;   (defadvice company-tern (before web-mode-set-up-ac-sources activate)
-;;     "Set `tern-mode' based on current language before running company-tern."
-;;     (if (equal major-mode 'web-mode)
-;; 	(let ((web-mode-cur-language
-;; 	       (web-mode-language-at-pos)))
-;; 	  (if (or (string= web-mode-cur-language "javascript")
-;; 		  (string= web-mode-cur-language "jsx"))
-;; 	      (unless tern-mode (tern-mode))
-;; 	    (if tern-mode (tern-mode -1))))))
-
-;;   (add-hook 'web-mode-hook 'company-mode)
-
-;;   (use-package sass-mode
-;;     :ensure t
-;;     :mode "\\.scss\\'")
-
-;;   ;; to get completion for HTML stuff
-;;   (use-package company-web)
-;;   (add-hook 'web-mode-hook 'company-mode))
-
-;; ;; configure CSS mode company backends
-;; (use-package css-mode
-;;   :config
-;;   (defun my-css-mode-hook ()
-;;     (set (make-local-variable 'company-backends)
-;;          '((company-css company-dabbrev-code company-files))))
-;;   (add-hook 'css-mode-hook 'my-css-mode-hook)
-;;   (add-hook 'css-mode-hook 'company-mode))
-
-;; npm i -g vscode-css-languageserver-bin
-(use-package css-mode
-  :ensure t
-  :init (setq css-indent-offset 2))
-
-(use-package css-eldoc
-  :ensure t
-  :commands turn-on-css-eldoc
-  :hook (css-mode . turn-on-css-eldoc))
-
-(use-package lsp-css
-  :ensure t
-  :commands lsp-css-enable
-  :hook (css-mode . lsp-css-enable))
-
-;; npm i -g vscode-html-languageserver-bin
-(use-package lsp-html
-  :ensure t
-  :commands lsp-html-enable
-  :hook (html-mode . lsp-html-enable))
-
- (use-package zencoding-mode
-    :config
-    (defun configure-web-zencoding-mode ()
-      (require 'zencoding-mode)
-      (zencoding-mode t))
-    (add-hook 'html-mode-hook 'configure-web-zencoding-mode))
-
-(use-package rainbow-mode
-  :ensure t
-  :defer 5
-  :diminish rainbow-mode
-  :config
-  (add-hook 'css-mode-hook 'rainbow-mode)
-  (add-hook 'web-mode-hook 'rainbow-mode))
-
-;; impatient mode - Live refresh of web pages
-;; https://github.com/skeeto/impatient-mode
-(use-package impatient-mode
-  :diminish (impatient-mode . " i")
-  :commands (impatient-mode))
-
-
-(use-package lorem-ipsum)
-
-(use-package js2-mode
-  :custom
-  (js-indent-level 4)
-  (js-switch-indent-offset 4)
-  (js2-bounce-indent-p t)
-  (js2-strict-missing-semi-warning nil)
-  (js2-missing-semi-one-line-override nil)
-  :config
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
-
-(use-package js2-refactor)
-
-;; JS interation
-(use-package js-comint
-  :config
-  (add-hook 'js2-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
-            (local-set-key (kbd "C-M-x") 'js-send-last-sexp-and-go)
-            (local-set-key (kbd "C-c b") 'js-send-buffer)
-            (local-set-key (kbd "C-c C-b") 'js-send-buffer-and-go)
-            (local-set-key (kbd "C-c l") 'js-load-file-and-go))))
-
-;; JS autocomplete
-(use-package tern
-  :config
-  (setq tern-command (append tern-command '("--no-port-file")))
-  (add-hook 'js2-mode-hook (lambda ()
-			     (tern-mode)
-			     (company-mode))))
-
-(use-package company-tern
-  :ensure t
-  :config (progn
-	    (add-to-list 'company-backends 'company-tern)
-	    (setq company-tern-meta-as-single-line t)
-	    (setq company-tooltip-align-annotations t)))
-
-;; Js debuger
-(use-package indium
-  :commands (indium-interaction-mode)
-  :config
-  (add-hook 'js2-mode-hook #'indium-interaction-mode))
-
-(use-package skewer-mode)
 
 (use-package smartparens
   :ensure t
@@ -815,12 +633,6 @@
   (epa-file-enable)
   :custom
   (epa-pinetry-mode 'loopback))
-
-;; (use-package epg-config
-;;   :after (epg)
-;;   :custom
-;;   (epg-gpg-program "gpg2")
-;;   (epg-gpg-home-directory "~/.gnupg"))
 
 (use-package org
   :ensure org-plus-contrib
@@ -944,46 +756,11 @@
   :config
   (setq alert-default-style 'libnotify))
 
-(use-package org-drill :ensure org-plus-contrib :after org)
-(use-package org-drill-table :ensure t :after org-drill)
-
 (use-package org-super-agenda
   :ensure t
   :after org
   :config
   (org-super-agenda-mode 1))
-
-(use-package lsp-mode
-  :ensure t
-  :config
-  (require 'lsp-imenu)
-  (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
-  
-  (lsp-define-stdio-client lsp-python "python"
-                           #'projectile-project-root
-                           '("pyls"))
-
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (lsp-python-enable)))
-
-  (use-package lsp-ui
-    :ensure t
-    :config
-    (setq lsp-ui-sideline-ignore-duplicate t)
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-  (use-package company-lsp
-    :config
-    (push 'company-lsp company-backends))
-
-  (defun lsp-set-cfg ()
-    (let ((lsp-cfg `(:pyls (:configurationSources ("flake8")))))
-      ;; TODO: check lsp--cur-workspace here to decide per server / project
-      (lsp--set-configuration lsp-cfg)))
-
-  (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
-  )
 
 
 (modify-coding-system-alist 'file "\\.txt\\'" 'windows-1251)
