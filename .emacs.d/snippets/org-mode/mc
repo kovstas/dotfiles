@@ -1,21 +1,36 @@
 # -*- mode: snippet -*-
 # name: MC sprint
-# key: mcs
+# key: msc
 # --
 
 $0** Sprint ${1:number} (${2:start} - ${3:end})
+
+Day time report
 #+BEGIN: clocktable :scope file :maxlevel 4 :block today :compact t
 #+END:
-
-*** Tasks
-**** NEXT ORG TIME
+*** Sprint Goals
+:PROPERTIES:
+:CATEGORY: Sprint Goals Work
+:END:
+*** Activity
+:PROPERTIES:
+:CATEGORY: Sprint Goals Activity
+:END:
+**** NEXT ORGANISATION
      :LOGBOOK:
      :END:
 **** NEXT RELAX
      :LOGBOOK:
      :END:
-*** Time report
+**** NEXT REVIEWS
+     :LOGBOOK:
+     :END:
+**** NEXT DEVELOPER FORUM
+     :LOGBOOK:
+     :END:
+*** Sprint time report
 #+BEGIN: clocktable :scope file :maxlevel 4 :tstart "<$2>" :tend "<$3>" :stepskip0 t :compact t
 #+END:
-*** Notes
-*** Conclusions
+
+*** Outcomes
+*** Summary
