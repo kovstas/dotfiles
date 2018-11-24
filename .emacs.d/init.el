@@ -2,7 +2,7 @@
 ;; (setq debug-on-quit t)
 
 (setq message-log-max t)
-
+ 
 (require 'package)
 (setq package-enable-at-startup nil)
 
@@ -93,64 +93,10 @@
   :init
   (load-theme 'doom-one))
 
-(use-package nyan-mode
-  :demand t
-  :init
-  (setq nyan-animate-nyancat t
-        nyan-wavy-trail t)
-  :config
-  (nyan-mode 1))
-
 (use-package spaceline
   :config
   (require 'spaceline-config)
   (spaceline-spacemacs-theme))
-
-
-(use-package font-lock+
-  :quelpa
-  (font-lock+ :repo "emacsmirror/font-lock-plus" :fetcher github))
-
-;; Important
-;; M-x all-the-icons-install-fonts
-;; fc-cache -f -v 
-(use-package all-the-icons
-  :config
-  (add-to-list
-   'all-the-icons-mode-icon-alist
-   '(package-menu-mode all-the-icons-octicon "package" :v-adjust 0.0)))
-
-(use-package all-the-icons-dired
-  :hook
-  (dired-mode . all-the-icons-dired-mode))
-
-(use-package spaceline-all-the-icons
-  :after spaceline
-  :preface
-   (spaceline-define-segment date
-    "The current date."
-    (format-time-string "%h %d week %W"))
-  :config
-  (spaceline-all-the-icons-theme)
-  (spaceline-all-the-icons--setup-package-updates)
-  (spaceline-all-the-icons--setup-git-ahead)
-  (spaceline-all-the-icons--setup-paradox)
-  (spaceline-toggle-battery-on)
-  (spaceline-toggle-all-the-icons-nyan-cat-on))
-
-(use-package all-the-icons-ivy
-  :after ivy projectile
-  :custom
-  (all-the-icons-ivy-buffer-commands '() "Don't use for buffers.")
-  (all-the-icons-ivy-file-commands
-   '(counsel-find-file
-     counsel-file-jump
-     counsel-recentf
-     counsel-projectile-find-file
-     counsel-projectile-find-dir) "Prettify more commands.")
-  :config
-  (all-the-icons-ivy-setup))
-
 
 (use-package dashboard
   
@@ -404,7 +350,13 @@
   (interactive)
   (find-file-other-window user-init-file))
 
+(defun me/reload-init-file ()
+  "Reload 'user-init-file'"
+  (interactive)
+  (load-file user-init-file))
+
 (global-set-key (kbd "C-c I") 'me/find-user-init-file)
+(global-set-key (kbd "C-c r") 'me/reload-init-file)
 
 (use-package expand-region
   
@@ -667,7 +619,7 @@
   (add-to-list 'org-speed-commands-user '("$" call-interactively 'org-archive-subtree))
 
   ;; Keyword
-  (setq org-todo-keywords '("REPEAT(r)" "TODO(t!)" "BACKLOG(b!)" "NEXT(n)" "WAITING(w@/!)"
+  (setq org-todo-keywords '("REPEAT(r)" "BACKLOG(b!)" "TODO(t!)" "NEXT(n)" "WAITING(w@/!)"
 			    "|" "DONE(d!/@)" "CANCELLED(c@/!)"))
   (setq org-todo-keywords-for-agenda '("REPEAT(r)" "TODO(t!)" "BACKLOG(b!)" "NEXT(n)" "WAITING(w@/!)"))
   (setq org-done-keywords-for-agenda '("DONE(d)" "CANCELLED(c)"))
@@ -686,20 +638,22 @@
     (setq org-capture-templates
         (quote (("t" "todo" entry (file org-default-notes-file)
 		 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-		("r" "review" entry (file org-default-notes-file)
-		 "* TODO %? :REVIEW:\n%U\n%a\n" :clock-in t :clock-resume t)
 		("b" "backlog" entry (file org-default-notes-file)
 		 "* BACKLOG %?\n%U\n%a\n" :clock-in t :clock-resume t)
 		("i" "idea" entry (file "ideas.org.gpg")
 		 "* %? :IDEA:\n%U\n%a\n" :clock-in t :clock-resume t)
                 ("n" "note" entry (file org-default-notes-file)
 		 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+		("w" "Goals of the WEEK" entry (file+datetree "~/org/diary.org.gpg")
+		 (file "~/org/templates/goals-of-week") :clock-in t :clock-resume t)
 		("m" "Goals of the MONTH" entry (file+datetree "~/org/diary.org.gpg")
 		 (file "~/org/templates/goals-of-month") :clock-in t :clock-resume t)
 		("d" "Goals of the DAY" entry (file+datetree "~/org/diary.org.gpg")
 		 (file "~/org/templates/goals-of-day") :clock-in t :clock-resume t)
 		("s" "Summary of the DAY" entry (file+datetree "~/org/diary.org.gpg")
 		 (file "~/org/templates/summary-of-day") :clock-in t :clock-resume t)
+		("y" "Goals of the YEAR" entry (file+datetree "~/org/diary.org.gpg")
+		 (file "~/org/templates/goals-of-year") :clock-in t :clock-resume t)
 		("w" "Work outcomes" entry (file org-default-notes-file)
 		 (file "~/org/templates/work-outcome") :clock-in t :clock-resume t)
                 ("h" "REPEAT" entry (file org-default-notes-file)
@@ -751,24 +705,137 @@
   (setq org-log-reschedule (quote time))
 
   ;; Custom functions
-
   (defun me/clock-in(kw)
     "Switch task to NEXT from TODO when clocking in. Skip caphure"
     (if (not (bound-and-true-p org-capture-mode))
 	"NEXT")
     )
- )
+  )
+
+  (use-package org-super-agenda
+    :ensure t
+    :after org
+    :config
+    (org-super-agenda-mode)
+    (defun pep-org-skip-subtree-if-category (category)
+      "Skip an agenda entry if it has a CATEGORY property equal to category."
+      (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+	(if (string= (org-entry-get nil "CATEGORY") category)
+            subtree-end
+	  nil)))
+    
+    (setq org-agenda-custom-commands
+          '(("p" "Personal agenda"
+	     (
+	      (agenda "" ((org-agenda-overriding-header "")
+			  (org-agenda-span-to-ndays 7)
+			  (org-super-agenda-groups '((:name "Today"
+							    :time-grid t)
+						     (:discard (:anything t))))))
+
+	      (tags "CATEGORY=\"WEEK\""((org-agenda-overriding-header "")
+					(org-agenda-prefix-format "  %?-12t% s")
+					(org-super-agenda-groups '((:name "ЦЕЛИ НА НЕДЕЛЮ:"
+									  :face (:foreground "white")
+									  :deadline future)
+								   (:discard (:anything t))))))
+
+
+	      (tags "CATEGORY=\"MONTH\""((org-agenda-overriding-header "")
+					 (org-agenda-prefix-format "  %?-12t% s")
+					 (org-super-agenda-groups '((:name "ЦЕЛИ НА МЕСЯЦ:"
+									   :face (:foreground "white")
+									   :deadline future)
+								   (:discard (:anything t))))))
+
+	      (tags "CATEGORY=\"YEAR\""((org-agenda-overriding-header "")
+					(org-agenda-prefix-format "  %?-12t% s")
+					(org-super-agenda-groups '((:name "ЦЕЛИ НА ГОД:"
+									  :face (:foreground "white")
+									  :deadline future)
+								   (:discard (:anything t))))))
+	      
+	      (tags "CATEGORY=\"DAY\""((org-agenda-overriding-header "")
+				       (org-super-agenda-groups '((:name "Главные цели на день:"
+									  :deadline 'future)
+								   (:discard (:anything t))))))
+	      (alltodo "" ((org-agenda-overriding-header "BACKLOG:")
+			   (org-agenda-skip-entry-if '(or (pep-org-skip-subtree-if-category "YEAR")
+							  (pep-org-skip-subtree-if-category "MONTH")
+							  (pep-org-skip-subtree-if-category "WEEK")
+							  (pep-org-skip-subtree-if-category "DAY")
+							  (pep-org-skip-subtree-if-category "WORK")
+							  ))
+			   (org-super-agenda-groups '((:auto-category t)))))
+	      )))
+	  ))
+
+(use-package org-brain
+  :bind (("C-c b v" . org-brain-visualize)
+         ("C-c b i" . org-id-get-create)
+         :map org-brain-visualize-mode-map
+         ("+" . org-brain-new-child)
+         ("L" . org-brain-cliplink-resource))
+  :init
+  (which-key-replace "C-c b" "brain")
+  :config
+  (setq org-id-track-globally t
+        org-brain-visualize-default-choices 'all
+        org-brain-show-text t
+        org-brain-title-max-length 0
+        org-brain-visualize-one-child-per-line t)
+
+  (defun org-brain-cliplink-resource ()
+  "Add a URL from the clipboard as an org-brain resource.
+Suggest the URL title as a description for resource."
+  (interactive)
+  (let ((url (org-cliplink-clipboard-content)))
+    (org-brain-add-resource
+     url
+     (org-cliplink-retrieve-title-synchronously url)
+     t)))
+
+  (push '("b" "Brain" plain (function org-brain-goto-end)
+          "* %i%?" :empty-lines 1)
+        org-capture-templates))
+
+
+(use-package link-hint
+  :after org-brain
+  :bind (:map org-brain-visualize-mode-map
+              ("." . link-hint-open-link)))
 
 (use-package org-alert
   :ensure t
   :config
-  (setq alert-default-style 'libnotify))
+  (setq alert-default-style 'osx-notifier
+	org-alert-interval 3600)
+  (org-alert-enable))
 
-(use-package org-super-agenda
+(use-package ox-minutes
   :ensure t
-  :after org
-  :config
-  (org-super-agenda-mode 1))
+  :after org)
+
+(use-package ox-tufte
+  :ensure t
+  :after org)
+
+(use-package ox-gfm
+  :ensure t
+  :after org)
+
+(use-package org-gcal
+  :commands (org-gcal-sync
+             org-gcal-fetch
+             org-gcal-refresh-token))
+
+(use-package org-kanban
+  :ensure t
+  :after org)
+
+(use-package org-cliplink
+  :commands (org-cliplink-clipboard-content))
 
 
 (modify-coding-system-alist 'file "\\.txt\\'" 'windows-1251)
+
