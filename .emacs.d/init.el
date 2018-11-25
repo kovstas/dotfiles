@@ -723,52 +723,51 @@
 	(if (string= (org-entry-get nil "CATEGORY") category)
             subtree-end
 	  nil)))
+
+    (setq org-columns-default-format
+      "%25ITEM %TODO %3PRIORITY %TIMESTAMP")
     
     (setq org-agenda-custom-commands
           '(("p" "Personal agenda"
 	     (
-	      (agenda "" ((org-agenda-overriding-header "")
-			  (org-agenda-span-to-ndays 7)
-			  (org-super-agenda-groups '((:name "Today"
-							    :time-grid t)
-						     (:discard (:anything t))))))
-
 	      (tags "CATEGORY=\"WEEK\""((org-agenda-overriding-header "")
-					(org-agenda-prefix-format "  %?-12t% s")
-					(org-super-agenda-groups '((:name "ЦЕЛИ НА НЕДЕЛЮ:"
+					(org-agenda-prefix-format "  (*) %?-12t% s")
+					(org-super-agenda-groups '((:name "ЦЕЛИ НА НЕДЕЛЮ:\n"
 									  :face (:foreground "white")
 									  :deadline future)
 								   (:discard (:anything t))))))
 
 
 	      (tags "CATEGORY=\"MONTH\""((org-agenda-overriding-header "")
-					 (org-agenda-prefix-format "  %?-12t% s")
-					 (org-super-agenda-groups '((:name "ЦЕЛИ НА МЕСЯЦ:"
+					 (org-agenda-prefix-format "  (*) %?-12t% s")
+					 (org-super-agenda-groups '((:name "ЦЕЛИ НА МЕСЯЦ:\n"
 									   :face (:foreground "white")
 									   :deadline future)
 								   (:discard (:anything t))))))
 
 	      (tags "CATEGORY=\"YEAR\""((org-agenda-overriding-header "")
-					(org-agenda-prefix-format "  %?-12t% s")
-					(org-super-agenda-groups '((:name "ЦЕЛИ НА ГОД:"
+					(org-agenda-prefix-format "  (*) %?-12t% s")
+					(org-super-agenda-groups '((:name "ЦЕЛИ НА ГОД:\n"
 									  :face (:foreground "white")
 									  :deadline future)
 								   (:discard (:anything t))))))
-	      
-	      (tags "CATEGORY=\"DAY\""((org-agenda-overriding-header "")
-				       (org-super-agenda-groups '((:name "Главные цели на день:"
-									  :deadline 'future)
-								   (:discard (:anything t))))))
-	      (alltodo "" ((org-agenda-overriding-header "BACKLOG:")
-			   (org-agenda-skip-entry-if '(or (pep-org-skip-subtree-if-category "YEAR")
-							  (pep-org-skip-subtree-if-category "MONTH")
-							  (pep-org-skip-subtree-if-category "WEEK")
-							  (pep-org-skip-subtree-if-category "DAY")
-							  (pep-org-skip-subtree-if-category "WORK")
-							  ))
-			   (org-super-agenda-groups '((:auto-category t)))))
-	      )))
-	  ))
+	      (tags "nothing" ((org-agenda-overriding-header "\n-------------------------------------------------------------------------------------\n")))
+	      (agenda "-CATEGORY=\"WORK\"-CATEGORY=\"WEEK\"-CATEGORY=\"MONTH\"-CATEGORY=\"YEAR\"" (			  (org-agenda-start-on-weekday nil)
+			  (org-deadline-warning-days 3)
+			  (org-agenda-view-columns-initially t)
+			  (org-agenda-start-with-log-mode t)
+			  (org-agenda-span 7)))))
+	    ("b" "Backlog"
+	     ((tags-todo "-CATEGORY=\"WORK\"" (
+;;			   (org-agenda-prefix-format "  %?-12t% s")
+			   (org-agenda-view-columns-initially t)
+			   (org-super-agenda-groups '((:auto-category t)))
+			   ))))
+	    ("5" "Quick tasks" tags-todo "EFFORT>=\"0:05\"&EFFORT<=\"0:15\"" ((org-super-agenda-groups '((:auto-category t)))))
+            ("0" "Unestimated tasks" tags-todo "EFFORT=\"\"" ((org-super-agenda-groups '((:auto-category t)))))
+	    )
+	  )
+    )
 
 (use-package org-brain
   :bind (("C-c b v" . org-brain-visualize)
@@ -776,8 +775,6 @@
          :map org-brain-visualize-mode-map
          ("+" . org-brain-new-child)
          ("L" . org-brain-cliplink-resource))
-  :init
-  (which-key-replace "C-c b" "brain")
   :config
   (setq org-id-track-globally t
         org-brain-visualize-default-choices 'all
@@ -824,18 +821,31 @@ Suggest the URL title as a description for resource."
   :ensure t
   :after org)
 
-(use-package org-gcal
-  :commands (org-gcal-sync
-             org-gcal-fetch
-             org-gcal-refresh-token))
-
 (use-package org-kanban
   :ensure t
   :after org)
 
 (use-package org-cliplink
+  :ensure t
   :commands (org-cliplink-clipboard-content))
 
 
 (modify-coding-system-alist 'file "\\.txt\\'" 'windows-1251)
 
+(server-start)
+
+(when (featurep 'ns)
+  (defun ns-raise-emacs ()
+    "Raise Emacs."
+    (ns-do-applescript "tell application \"Emacs\" to activate"))
+
+  (defun ns-raise-emacs-with-frame (frame)
+    "Raise Emacs and select the provided frame."
+    (with-selected-frame frame
+      (when (display-graphic-p)
+        (ns-raise-emacs))))
+
+  (add-hook 'after-make-frame-functions 'ns-raise-emacs-with-frame)
+
+  (when (display-graphic-p)
+    (ns-raise-emacs)))
