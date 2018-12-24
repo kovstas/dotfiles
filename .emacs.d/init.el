@@ -59,7 +59,7 @@
 (use-package auth-source
   :ensure t
   :custom
-  (auth-sources '("~/.authinfo.gpg")))
+  (auth-sources '("~/.authinfo")))
 
 (use-package real-auto-save
   :ensure t
@@ -591,6 +591,8 @@
   :bind (("C-c c" . org-capture)
 	 ("C-c w" . org-refile)
 	 ("<f12>" . org-agenda)
+	 ("C-c k s" . org-agenda-columns)
+	 ("C-c k q" . org-agenda-quit)
 	 ("C-c y" . org-yank))
   :mode (("\\.org$" . org-mode)
          ("\\.org_archive$" . org-mode))
@@ -646,16 +648,20 @@
 		 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
 		("w" "Goals of the WEEK" entry (file+datetree "~/org/diary.org.gpg")
 		 (file "~/org/templates/goals-of-week") :clock-in t :clock-resume t)
+		("W" "Summary of the WEEK" entry (file+datetree "~/org/diary.org.gpg")
+		 (file "~/org/templates/summary-of-week") :clock-in t :clock-resume t)
 		("m" "Goals of the MONTH" entry (file+datetree "~/org/diary.org.gpg")
 		 (file "~/org/templates/goals-of-month") :clock-in t :clock-resume t)
+		("M" "Summary of the MONTH" entry (file+datetree "~/org/diary.org.gpg")
+		 (file "~/org/templates/summary-of-month") :clock-in t :clock-resume t)
 		("d" "Goals of the DAY" entry (file+datetree "~/org/diary.org.gpg")
 		 (file "~/org/templates/goals-of-day") :clock-in t :clock-resume t)
-		("s" "Summary of the DAY" entry (file+datetree "~/org/diary.org.gpg")
+		("D" "Summary of the DAY" entry (file+datetree "~/org/diary.org.gpg")
 		 (file "~/org/templates/summary-of-day") :clock-in t :clock-resume t)
 		("y" "Goals of the YEAR" entry (file+datetree "~/org/diary.org.gpg")
 		 (file "~/org/templates/goals-of-year") :clock-in t :clock-resume t)
-		("w" "Work outcomes" entry (file org-default-notes-file)
-		 (file "~/org/templates/work-outcome") :clock-in t :clock-resume t)
+		("s" "Sprint" entry (file+datetree "~/org/lognex.org.gpg")
+		 (file "~/org/templates/mc") :clock-in t :clock-resume t)
                 ("h" "REPEAT" entry (file org-default-notes-file)
                  "* REPEAT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: REPEAT\n:END:\n")))))
 
@@ -724,47 +730,65 @@
             subtree-end
 	  nil)))
 
-    (setq org-columns-default-format
-      "%25ITEM %TODO %3PRIORITY %TIMESTAMP")
+    (setq org-columns-default-format "%40ITEM %TODO %3PRIORITY %10TAGS %17Effort(Estimated Effort){:} %12CLOCKSUM")
     
     (setq org-agenda-custom-commands
           '(("p" "Personal agenda"
 	     (
-	      (tags "CATEGORY=\"WEEK\""((org-agenda-overriding-header "")
-					(org-agenda-prefix-format "  (*) %?-12t% s")
-					(org-super-agenda-groups '((:name "ЦЕЛИ НА НЕДЕЛЮ:\n"
-									  :face (:foreground "white")
-									  :deadline future)
-								   (:discard (:anything t))))))
-
-
-	      (tags "CATEGORY=\"MONTH\""((org-agenda-overriding-header "")
-					 (org-agenda-prefix-format "  (*) %?-12t% s")
-					 (org-super-agenda-groups '((:name "ЦЕЛИ НА МЕСЯЦ:\n"
-									   :face (:foreground "white")
-									   :deadline future)
-								   (:discard (:anything t))))))
-
-	      (tags "CATEGORY=\"YEAR\""((org-agenda-overriding-header "")
-					(org-agenda-prefix-format "  (*) %?-12t% s")
-					(org-super-agenda-groups '((:name "ЦЕЛИ НА ГОД:\n"
-									  :face (:foreground "white")
-									  :deadline future)
-								   (:discard (:anything t))))))
-	      (tags "nothing" ((org-agenda-overriding-header "\n-------------------------------------------------------------------------------------\n")))
-	      (agenda "-CATEGORY=\"WORK\"-CATEGORY=\"WEEK\"-CATEGORY=\"MONTH\"-CATEGORY=\"YEAR\"" (			  (org-agenda-start-on-weekday nil)
-			  (org-deadline-warning-days 3)
-			  (org-agenda-view-columns-initially t)
-			  (org-agenda-start-with-log-mode t)
-			  (org-agenda-span 7)))))
+	      (agenda "-CATEGORY=\"WORK\"" (
+					    (org-agenda-start-on-weekday nil)
+					    (org-deadline-warning-days 5)
+					    (org-agenda-start-with-log-mode t)
+					    (org-agenda-span 7)))
+	      (tags-todo "-CATEGORY=\"WORK\"" (
+					       (org-agenda-overriding-header "\nTasks by Context\n------------------")
+					       (org-super-agenda-groups '(
+									  (:todo "NEXT"
+										 :name "In Progress")
+									  (:name "Important"
+										 :priority>= "B")
+									  (:name "Low Priority"
+										 :priority "C")
+									  (:name "Due today"
+										 :scheduled today
+										 :deadline today)
+									  (:name "Overdue"
+										 :scheduled past
+										 :deadline past)
+									  (:name "Due soon"
+										 :scheduled future
+										 :deadline future)
+									  (:name "Waiting..."
+										 :todo "WAITING"
+										 :order 98)
+									  (:discard (:anything t))
+									  ))))
+	      ))
 	    ("b" "Backlog"
-	     ((tags-todo "-CATEGORY=\"WORK\"" (
+	     ((tags-todo "-BIRTH&-CATEGORY=\"WORK\"&EFFORT=>\"0:05\"" (
 ;;			   (org-agenda-prefix-format "  %?-12t% s")
-			   (org-agenda-view-columns-initially t)
 			   (org-super-agenda-groups '((:auto-category t)))
 			   ))))
-	    ("5" "Quick tasks" tags-todo "EFFORT>=\"0:05\"&EFFORT<=\"0:15\"" ((org-super-agenda-groups '((:auto-category t)))))
-            ("0" "Unestimated tasks" tags-todo "EFFORT=\"\"" ((org-super-agenda-groups '((:auto-category t)))))
+	    ("5" "Quick tasks" tags-todo "-BOOK&-COURSE&-BIRTH&EFFORT>=\"0:05\"&EFFORT<=\"0:15\"" ((org-super-agenda-groups '((:auto-category t)))))
+	    ("1" "Up to an hour" tags-todo "-BOOK&-COURSE&-BIRTH&EFFORT>\"0:15\"&EFFORT<=\"1:0\"" ((org-super-agenda-groups '((:auto-category t)))))
+	    ("2" "Up to two hours" tags-todo "-BOOK&-COURSE&-BIRTH&EFFORT>\"1:00\"&EFFORT<\"2:0\"" ((org-super-agenda-groups '((:auto-category t)))))
+	    ("6" "Up to six hours" tags-todo "-BOOK&-COURSE&-BIRTH&EFFORT>=\"2:00\"&EFFORT<\"6:0\"" ((org-super-agenda-groups '((:auto-category t)))))
+	    ("8" "More than six hours" tags-todo "-BOOK&-COURSE&-BIRTH&EFFORT>=\"6:00\"" ((org-super-agenda-groups '((:auto-category t)))))
+	    ("w" "Week Review" tags "CATEGORY=\"DAY_REVIEW\"" (
+							       (org-agenda-prefix-format "  %?-12t% s")
+							       (org-agenda-sorting-strategy '(timestamp-down))))
+	    ("m" "Month Review" tags "CATEGORY=\"WEEK_REVIEW\"" (
+								 (org-agenda-prefix-format "  %?-12t% s")
+								 (org-agenda-sorting-strategy '(timestamp-down))))
+	    ("y" "Year Review" tags "CATEGORY=\"MONTH_REVIEW\"" (
+								 (org-agenda-prefix-format "  %?-12t% s")
+							       (org-agenda-sorting-strategy '(timestamp-down))))
+	    ("l" "Books and courses" tags-todo "BOOK|COURSE" (
+							      (org-super-agenda-groups '((:auto-category t)))
+							      (org-agenda-prefix-format "  %?-12t% s"))
+	     )
+            ("0" "Unestimated tasks" tags-todo "-BOOK&-COURSE&-BIRTH&EFFORT=\"\"" ((org-super-agenda-groups '((:auto-category t)))))
+
 	    )
 	  )
     )
@@ -849,3 +873,8 @@ Suggest the URL title as a description for resource."
 
   (when (display-graphic-p)
     (ns-raise-emacs)))
+
+(use-package avy
+  :ensure t
+  :config
+  (avy-setup-default))
