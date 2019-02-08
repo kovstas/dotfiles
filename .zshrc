@@ -175,5 +175,6 @@ export PATH="$PATH:$GOPATH/bin"
 export NVM_DIR="$HOME/.nvm"
 . "/usr/local/opt/nvm/nvm.sh"
 
-export PATH=/usr/local/anaconda3/bin:"$PATH"
+export PATH="~/anaconda/envs/pos/bin:$PATH"
 export PATH="$PATH:$HOME/.rvm/bin:$HOME/.local/bin"
+function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}

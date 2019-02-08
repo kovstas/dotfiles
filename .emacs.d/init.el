@@ -47,6 +47,13 @@
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
+(use-package racket-mode
+  :ensure t
+  :mode "\\.rkt\\'"
+  :config
+  (setq tab-always-indent 'complete)
+  (add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
+  (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable))
 
 (use-package cus-edit
   :ensure nil
@@ -878,3 +885,7 @@ Suggest the URL title as a description for resource."
   :ensure t
   :config
   (avy-setup-default))
+
+(use-package ox-hugo
+  :ensure t           
+  :after ox)
