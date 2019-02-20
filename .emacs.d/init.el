@@ -2,7 +2,7 @@
 ;; (setq debug-on-quit t)
 
 (setq message-log-max t)
- 
+
 (require 'package)
 (setq package-enable-at-startup nil)
 
@@ -34,6 +34,9 @@
   (quelpa-use-package-inhibit-loading-quelpa
    t "Improve startup performance"))
 
+(add-to-list 'load-path "~/.emacs.d/extensions/")
+(require 'gitignore)
+
 (setq home-directory (getenv "HOME"))
 (defun at-homedir (&optional suffix)
   (concat-normalize-slashes home-directory suffix))
@@ -46,6 +49,12 @@
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
+
+(use-package multi-term
+  :ensure t
+  :init (setq multi-term-buffer-name "term"
+	      multi-term-program "/bin/zsh")
+  :bind (("<f5>" . multi-term-dedicated-toggle)))
 
 (use-package racket-mode
   :ensure t
@@ -61,12 +70,6 @@
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
   (when (and custom-file (file-exists-p custom-file))
     (load-file custom-file)))
-
-;; Security
-(use-package auth-source
-  :ensure t
-  :custom
-  (auth-sources '("~/.authinfo")))
 
 (use-package real-auto-save
   :ensure t
@@ -106,7 +109,7 @@
   (spaceline-spacemacs-theme))
 
 (use-package dashboard
-  
+
   :config
   (dashboard-setup-startup-hook)
   :custom
@@ -122,13 +125,13 @@
 ;; Editor
 
 (use-package region-bindings-mode
-  
+
   :config
   (setq region-bindings-mode-disable-predicates '((lambda () buffer-read-only)))
   (region-bindings-mode-enable))
 
 (use-package multiple-cursors
-  
+
   :after (region-bindings-mode)
   :bind (("C-r" . mc/edit-lines)
 	 (:map region-bindings-mode-map
@@ -145,22 +148,22 @@
          ("C-+" . mc/insert-numbers)))
   :config
   (use-package mc-extras
-    
+
     :after (multiple-cursors region-bindings-mode)
-    :bind (:map region-bindings-mode-map 
+    :bind (:map region-bindings-mode-map
            ("M-." . mc/mark-next-sexps)
            ("M-," . mc/mark-previous-sexps)
            ("C-|" . mc/move-to-column)
            ("C-." . mc/remove-current-cursor)))
   (use-package mc-cycle-cursors
-    
+
     :bind (:map mc/keymap
            ("C-n" . mc/cycle-forward)
            ("C-p" . mc/cycle-backward))))
 
 ;; Windows
 (use-package winum
-  
+
   :bind (("M-0" . winum-select-window-0-or-10)
 	 ("M-1" . winum-select-window-1)
 	 ("M-2" . winum-select-window-2)
@@ -176,7 +179,7 @@
   (winum-mode))
 
 (use-package reverse-im
-  
+
   :config
   (reverse-im-activate "russian-computer"))
 
@@ -185,7 +188,8 @@
   (fset 'yes-or-no-p 'y-or-n-p)
   (set-default-font "Monoid 12")
   (tool-bar-mode -1)
-  (setq create-lockfiles nil)  
+  (setq create-lockfiles nil)
+  (setq global-auto-revert-mode t)
   (setq inhibit-startup-screen t)
   (setq initial-scratch-message nil)
   (setq backup-directory-alist `(("." . "~/.saves")))
@@ -198,7 +202,7 @@
   (setq mac-command-key-is-meta t)
   (setq mac-command-modifier 'meta)
   (setq mac-option-modifier nil)
-  
+
   (add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
 (use-package company
@@ -255,7 +259,7 @@
   (ivy-height 10)
   (ivy-count-format "(%d/%d)"))
 
-(use-package swiper  
+(use-package swiper
   :bind ("C-s" . swiper)
   :custom
   (swiper-include-line-number-in-search t))
@@ -269,7 +273,7 @@
   :mode  ("\\Dockerfile" . dockerfile-mode))
 
 (use-package docker-compose-mode
-  
+
   :delight docker-compose-mode)
 
 (use-package projectile
@@ -296,7 +300,7 @@
   :ensure)
 
 (use-package ace-window
-  
+
   :bind ("M-o" . ace-window)
   :custom
   (aw-background nil)
@@ -305,11 +309,11 @@
   (aw-scope 'global "Highlight all frames."))
 
 (use-package ace-jump-mode
-  
+
   :bind (("C-c SPC" . ace-jump-mode)))
 
 (use-package golden-ratio
-  
+
   :after (ace-window winum)
   :delight golden-ratio-mode
   :config
@@ -333,7 +337,7 @@
 
 
 (use-package markdown-mode
-  
+
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -341,14 +345,14 @@
   :init (setq markdown-command "multimarkdown"))
 
 (use-package apib-mode
-  
+
   :mode (("\\.apib\\'" . apib-mode)))
 
 (use-package restclient
   )
 
 (use-package restart-emacs
-	     
+
 	     :config
 	     (global-set-key (kbd "C-x C-c") 'restart-emacs))
 
@@ -366,13 +370,15 @@
 (global-set-key (kbd "C-c r") 'me/reload-init-file)
 
 (use-package expand-region
-  
+
   :bind
   ("C-+" . er/contract-region)
   ("C-=" . er/expand-region))
 
 (use-package json-mode
-  
+  :ensure t
+  :config
+  (setq js-indent-level 2)
   :after (json-reformat json-snatcher)
   :mode ("\\.json$" . json-mode))
 
@@ -380,7 +386,7 @@
 ;;   :ensure t)
 
 (use-package google-translate
-  
+
   :bind (("C-x C-t" . google-translate-at-point)
 	 ("C-x C-r" . google-translate-at-point-reverse))
   :custom
@@ -411,7 +417,7 @@
   (display-battery-mode 1))
 
 (use-package nginx-mode
-  
+
   :mode ("\\.nginx'" . nginx-mode))
 
 (use-package paradox
@@ -485,7 +491,7 @@
   (setq tramp-default-proxies-alist nil))
 
 (use-package magit
-  
+
   :custom
   (magit-completing-read-function 'ivy-completing-read "Force Ivy usage.")
   (magit-stage-all-confirm nil)
@@ -520,11 +526,11 @@
                 ("U" . magit-update-index))))
 
 (use-package git-timemachine
-  
+
   :bind ("C-c t" . git-timemachine))
 
 (use-package magithub
-  
+
   :after magit
   :custom
   (magithub-clone-default-directory "~/projects/")
@@ -590,6 +596,7 @@
   :after (epg)
   :config
   (epa-file-enable)
+  (setq-default epa-file-cache-passphrase-for-symmetric-encryption t)
   :custom
   (epa-pinetry-mode 'loopback))
 
@@ -738,7 +745,7 @@
 	  nil)))
 
     (setq org-columns-default-format "%40ITEM %TODO %3PRIORITY %10TAGS %17Effort(Estimated Effort){:} %12CLOCKSUM")
-    
+
     (setq org-agenda-custom-commands
           '(("p" "Personal agenda"
 	     (
@@ -800,33 +807,6 @@
 	  )
     )
 
-(use-package org-brain
-  :bind (("C-c b v" . org-brain-visualize)
-         ("C-c b i" . org-id-get-create)
-         :map org-brain-visualize-mode-map
-         ("+" . org-brain-new-child)
-         ("L" . org-brain-cliplink-resource))
-  :config
-  (setq org-id-track-globally t
-        org-brain-visualize-default-choices 'all
-        org-brain-show-text t
-        org-brain-title-max-length 0
-        org-brain-visualize-one-child-per-line t)
-
-  (defun org-brain-cliplink-resource ()
-  "Add a URL from the clipboard as an org-brain resource.
-Suggest the URL title as a description for resource."
-  (interactive)
-  (let ((url (org-cliplink-clipboard-content)))
-    (org-brain-add-resource
-     url
-     (org-cliplink-retrieve-title-synchronously url)
-     t)))
-
-  (push '("b" "Brain" plain (function org-brain-goto-end)
-          "* %i%?" :empty-lines 1)
-        org-capture-templates))
-
 
 (use-package link-hint
   :after org-brain
@@ -887,5 +867,26 @@ Suggest the URL title as a description for resource."
   (avy-setup-default))
 
 (use-package ox-hugo
-  :ensure t           
+  :ensure t
   :after ox)
+
+(use-package neotree
+  :ensure t
+  :bind ("C-c n" . neotree-toggle))
+
+(use-package web-mode
+  :ensure t
+  :config
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-current-column-highlight t)
+
+  (add-hook 'local-write-file-hooks
+            (lambda ()
+              (delete-trailing-whitespace)
+               nil))
+
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode)))
