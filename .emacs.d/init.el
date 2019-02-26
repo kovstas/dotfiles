@@ -46,6 +46,7 @@
                             suffix))
 
 (use-package exec-path-from-shell
+  :ensure t
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
@@ -70,17 +71,6 @@
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
   (when (and custom-file (file-exists-p custom-file))
     (load-file custom-file)))
-
-(use-package real-auto-save
-  :ensure t
-  :init
-  (add-hook 'restclient-mode-hook 'real-auto-save-mode)
-  (add-hook 'markdown-mode 'real-auto-save-mode)
-  (add-hook 'apib-mode 'real-auto-save-mode)
-  (add-hook 'org-mode-hook 'real-auto-save-mode)
-  (add-hook 'prog-mode-hook 'real-auto-save-mode)
-  :config
-  (setq real-auto-save-interval 10))
 
 (use-package which-key
   :ensure t
@@ -186,6 +176,7 @@
 (use-package emacs
   :config
   (fset 'yes-or-no-p 'y-or-n-p)
+  (setq tags-revert-without-query 1)
   (set-default-font "Monoid 12")
   (tool-bar-mode -1)
   (setq create-lockfiles nil)
@@ -206,10 +197,14 @@
   (add-to-list 'default-frame-alist '(fullscreen . maximized)))
 
 (use-package company
+  :ensure t
   :init (global-company-mode)
   :config
    (define-key company-mode-map (kbd "M-j") 'company-select-next)
    (define-key company-mode-map (kbd "M-k") 'company-select-previous)
+
+   (eval-after-load 'company-etags '(progn (add-to-list 'company-etags-modes 'web-mode)))
+   (setq company-etags-everywhere '(html-mode web-mode nxml-mode))
    (use-package company-anaconda
     :ensure t
     :init (add-to-list 'company-backends 'company-anaconda))
@@ -335,14 +330,19 @@
   :init
   (golden-ratio-mode 1))
 
-
 (use-package markdown-mode
+  :ensure t
+  :mode (("\\.markdown$" . markdown-mode)
+         ("\\.md$" . markdown-mode)
+         ("\\.mkd$" . markdown-mode)
+         ("\\.pdc$" . markdown-mode)
+         ("\\.README$" . markdown-mode)))
 
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
+(use-package graphql-mode
+  :ensure t
+  :mode ("\\.graphql$" . graphql-mode))
+
+
 
 (use-package apib-mode
 
@@ -578,8 +578,20 @@
   :config
   (show-paren-mode t))
 
+(use-package flycheck-pos-tip :ensure t)
 (use-package flycheck
-  :ensure t)
+  :ensure t
+  :commands global-flycheck-mode
+  :init (global-flycheck-mode)
+  :config (progn
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (setq flycheck-standard-error-navigation nil)
+    ;; flycheck errors on a tooltip (doesnt work on console)
+    (when (display-graphic-p (selected-frame))
+      (eval-after-load 'flycheck
+        '(custom-set-variables
+        '(flycheck-display-errors-function
+          #'flycheck-pos-tip-error-messages))))))
 
 
 (use-package smartparens
@@ -874,19 +886,141 @@
   :ensure t
   :bind ("C-c n" . neotree-toggle))
 
+(use-package sgml-mode
+  :ensure t)
+
 (use-package web-mode
   :ensure t
+  :mode (("\\.phtml\\'" . web-mode)
+         ("\\.tpl\\.php\\'" . web-modwae)
+         ("\\.[agj]sp\\'" . web-mode)
+         ("\\.as[cp]x\\'" . web-mode)
+         ("\\.erb\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode)
+         ("\\.djhtml\\'" . web-mode)
+         ("\\.html?\\'" . web-mode))
+  :hook (web-mode-hook . (lambda ()
+                           (set (make-local-variable 'company-backends)
+                                '(company-tern company-web-html company-yasnippet company-files))
+                           (company-mode t)))
+  :custom
+  (web-mode-enable-current-element-highlight t)
+  (web-mode-enable-auto-closing t)
+  (web-mode-enable-auto-expanding t)
+  (web-mode-enable-auto-pairing t)
+  (web-mode-enable-auto-quoting t)
+  (web-mode-enable-css-colorization t)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-css-indent-offset 2)
   :config
-  (setq web-mode-enable-auto-pairing t)
-  (setq web-mode-enable-css-colorization t)
-  (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-current-column-highlight t)
+  (use-package company-web
+    :ensure t
+    :after (company dash web-completion-data))
+  (use-package web-mode-edit-element
+    :ensure t
+    :hook (web-mode-hook . web-mode-edit-element-minor-mode))
+  (use-package web-narrow-mode
+    :ensure t
+    :hook (web-mode-hook . web-narrow-mode))
+  ;; Enable JavaScript completion between <script>...</script> etc.
+  ;; TODO: check why company and AC are mentioned together (see below)
+  (defadvice company-tern (before web-mode-set-up-ac-sources activate)
+    "Set `tern-mode' based on current language before running company-tern."
+    (message "advice")
+    (if (equal major-mode 'web-mode)
+        (let ((web-mode-cur-language
+               (web-mode-language-at-pos)))
+          (if (or (string= web-mode-cur-language "javascript")
+                  (string= web-mode-cur-language "jsx")
+                  )
+              (unless tern-mode (tern-mode))
+            (if tern-mode (tern-mode -1)))))))
 
-  (add-hook 'local-write-file-hooks
-            (lambda ()
-              (delete-trailing-whitespace)
-               nil))
+(use-package css-mode
+  :ensure t
+  :init
+  (setq css-indent-offset 2)
+  :mode ("\\.scss$" . css-mode))
 
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode)))
+(use-package scss-mode
+  :ensure t
+  :mode ("\\.scss$" . scss-mode))
+
+(use-package css-eldoc
+  :ensure t
+  :after (eldoc)
+  :hook (css-mode-hook . turn-on-css-eldoc))
+
+(use-package emmet-mode
+  :ensure t
+  :delight emmet-mode
+  :commands emmet-mode
+  :hook ((sgml-mode-hook nxml-mode-hook django-mode sgml-mode-hook css-mode-hook) . emmet-mode)
+  :custom
+  (emmet-move-cursor-between-quotes t)
+  (emmet-indentation 2))
+
+(use-package rainbow-mode
+  :ensure t
+  :hook (css-mode-hook . rainbow-mode))
+
+(use-package w3m
+  :ensure t
+  :commands w3m
+  :hook (w3m-display-hook . (lambda (url)
+                              (rename-buffer
+                               (format "*w3m: %s*" (or w3m-current-title
+                                                       w3m-current-url)) t)))
+  :custom
+  (w3m-coding-system 'utf-8)
+  (w3m-file-coding-system 'utf-8)
+  (w3m-file-name-coding-system 'utf-8)
+  (w3m-input-coding-system 'utf-8)
+  (w3m-output-coding-system 'utf-8)
+  (w3m-terminal-coding-system 'utf-8)
+  (w3m-use-cookies t)
+  :config
+  ;; special chars
+  (standard-display-ascii ?\200 [15])
+  (standard-display-ascii ?\201 [21])
+  (standard-display-ascii ?\202 [24])
+  (standard-display-ascii ?\203 [13])
+  (standard-display-ascii ?\204 [22])
+  (standard-display-ascii ?\205 [25])
+  (standard-display-ascii ?\206 [12])
+  (standard-display-ascii ?\210 [23])
+  (standard-display-ascii ?\211 [14])
+  (standard-display-ascii ?\212 [18])
+  (standard-display-ascii ?\214 [11])
+  (standard-display-ascii ?\222 [?\'])
+  (standard-display-ascii ?\223 [?\"])
+  (standard-display-ascii ?\224 [?\"])
+  (standard-display-ascii ?\227 " -- "))
+
+(use-package eww
+  :preface
+  (defun eww-more-readable () ;;TODO: add to appropriate hook
+    "Makes eww more pleasant to use. Run it after eww buffer is loaded."
+    (interactive)
+    (setq eww-header-line-format nil) ;; removes page title
+    (setq mode-line-format nil) ;; removes mode-line
+    (set-window-margins (get-buffer-window) 20 20) ;; increases size of margins
+    (redraw-display) ;; apply mode-line changes
+    (eww-reload 'local))) ;; apply eww-header changes
+
+(use-package real-auto-save
+  :ensure t
+  :init
+  (add-hook 'restclient-mode-hook 'real-auto-save-mode)
+  (add-hook 'markdown-mode 'real-auto-save-mode)
+  (add-hook 'apib-mode 'real-auto-save-mode)
+  (add-hook 'org-mode-hook 'real-auto-save-mode)
+  (add-hook 'prog-mode-hook 'real-auto-save-mode)
+  :config
+  (setq real-auto-save-interval 10))
+
+(use-package rvm
+  :ensure t
+  :config
+  (rvm-use-default))
