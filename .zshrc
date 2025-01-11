@@ -96,11 +96,6 @@ extract () {
   fi
 }
 
-# -----------
-# Function for git
-# -----------
-
-
 alias githr='git reset --hard HEAD'
 alias sshrestart='sudo launchctl unload /System/Library/LaunchDaemons/ssh.plist && sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist'
 alias sshlist='sudo lsof -i -n | grep ssh'
@@ -121,60 +116,15 @@ jpid () {
     ps -aux | grep java | grep $1 | awk '{ print $2 }'
 }
 
+export COURSIER_CREDENTIALS=/Users/kovstas/credentials.properties
 
-gitname () {
-    gitconfig 'name' $1
-}
-
-gitemail () {
-    gitconfig 'email' $1
-}
-
-gitpep () {
-    gitname 'PepRoll'
-    gitemail 'peproll@protonmail.com'
-}
-
-gitconfig () {
-    case $1 in
-        name)
-            if [[ -n $2 ]]; then
-                git config user.name "$2"
-            else
-                name=$(git config user.name)
-                echo "$name"
-            fi
-            ;;
-        email)
-            if [[ -n $2 ]]; then
-                git config user.email "$2"
-            else
-                email=$(git config user.email)
-                echo "$email"
-            fi
-            ;;
-        *)
-            echo 'Not implemented case!'
-    esac
-}
-
-eval "$(pyenv init -)"
-
-# Work
-
-if [ -f ~/.work/init.sh ]; then
-    source ~/.work/init.sh
-fi
-
-if [ -f ~/Go ]; then
-    `mkdir ~/Go`
-fi
-
-export GOPATH="$HOME/Go"
-export PATH="$PATH:$GOPATH/bin"
 export NVM_DIR="$HOME/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
-export PATH="~/anaconda/envs/pos/bin:$PATH"
-export PATH="$PATH:$HOME/.rvm/bin:$HOME/.local/bin"
-function gi() { curl -L -s https://www.gitignore.io/api/$@ ;}
+export JAVA_HOME=`/usr/libexec/java_home -v 17.0`
+
+alias python=$(pyenv which python)
+export PATH="/opt/homebrew/opt/ansible@8/bin:$PATH"
+
+
