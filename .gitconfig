@@ -1,0 +1,16 @@
+[core]
+	whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+	trustctime = false
+	editor = nvim
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
+[github]
+	user = kovstas
+[user]
+	name = Stanislav Kovalenko
+	email = mail@kovstas.dev
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAG4OeL7c7G0nuZYkaSjRWCUsMvNBiCzruR9ckxqyqwe
