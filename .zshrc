@@ -53,6 +53,11 @@ source $ZSH/oh-my-zsh.sh
 
 alias sshlist='sudo lsof -i -n | grep ssh'
 
+# Get bundle id
+getappid() {
+    osascript -e "id of app \"$1\""
+}
+
 # Find and kill process by name
 killbyname() {
     ps aux | grep "$1" | grep -v grep | awk '{print $2}' | xargs kill -9
@@ -73,3 +78,4 @@ clip () {
 	xclip -sel clip
     fi
 }
+
