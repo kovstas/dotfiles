@@ -1,0 +1,115 @@
+tap "aws/tap"
+tap "buo/cask-upgrade"
+tap "codecrafters-io/tap"
+tap "coursier/formulas"
+tap "felixkratz/formulae"
+tap "hashicorp/tap"
+tap "homebrew/autoupdate"
+tap "homebrew/services"
+tap "keidarcy/tap"
+tap "mediosz/tap"
+tap "nikitabobko/tap"
+tap "sdkman/tap"
+
+brew "ansible"
+brew "ansible@8"
+brew "copilot-cli"
+brew "awscli"
+brew "codecrafters-io/tap/codecrafters" # Codecrafters CLI for coding exercises
+brew "colima", restart_service: :changed
+brew "coreutils"
+brew "coursier"
+brew "cryptography" # Required by ansible
+brew "dive" # Docker image exploration tool
+brew "docker-compose"
+brew "docker"
+brew "borders"
+brew "sketchybar"
+brew "flyway"
+brew "fzf"
+brew "gemini-cli" # Gemini protocol client
+brew "gh"
+brew "git-lfs" # Git Large File Storage
+brew "git"
+brew "glib" # Required by various applications
+brew "grpcurl" # CLI tool for interacting with gRPC servers
+brew "harfbuzz"
+brew "helm" # Kubernetes package manager
+brew "htop"
+brew "jenv" # Java environment manager
+brew "jq" # Command-line JSON processor
+brew "k9s" # Kubernetes CLI tool
+brew "e1s" # E1S is a tool for managing and deploying serverless applications
+brew "kubernetes-cli" # Kubernetes command-line tool
+brew "libxlsxwriter" # C library for writing Excel XLSX files
+brew "lua"
+brew "mas" # Mac App Store CLI
+brew "maven"
+brew "midnight-commander"
+brew "neovim"
+brew "node"
+brew "nowplaying-cli"
+brew "nvm"
+brew "openai-whisper"
+brew "pipenv"
+brew "postgresql@14"
+brew "pyenv"
+brew "python" # Python 3.x
+brew "sbt"
+brew "scala"
+brew "sdkman-cli"
+brew "sniffnet" # Network monitoring tool
+brew "sqlite"
+brew "sshpass"
+brew "starship"
+brew "switchaudio-osx"
+brew "terraform"
+brew "tflint"
+brew "thefuck"
+brew "tmux"
+brew "tree"
+brew "z"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+
+cask "1password-cli"
+cask "aerospace"
+cask "appcleaner"
+cask "bruno"
+cask "bartender"
+cask "chatgpt"
+cask "claude"
+cask "double-commander"
+cask "folx"
+cask "font-hack-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-jetbrains-mono"
+cask "font-sf-mono"
+cask "font-sf-pro"
+cask "ghostty"
+cask "grandperspective"
+cask "macfuse"
+cask "mkvtoolnix-app"
+cask "obs"
+cask "pearcleaner"
+cask "raycast"
+cask "sf-symbols"
+cask "stats"
+cask "swipeaerospace"
+cask "veracrypt"
+cask "zed"
+
+mas "1Password for Safari", id: 1569813296
+mas "Infuse", id: 1136220934
+mas "Keka", id: 470158793
+mas "MoneyWiz", id: 1511185140
+mas "NextDNS", id: 1464122853
+mas "Notability", id: 360593530
+mas "Numbers", id: 409203825
+mas "Tailscale", id: 1475387142
+mas "Telegram", id: 747648890
+mas "Things", id: 904280696
+mas "Toggl Track", id: 1291898086
+mas "WireGuard", id: 1451685025
+mas "Xcode", id: 497799835
+mas "Slack", id: 803453959

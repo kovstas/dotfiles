@@ -33,11 +33,8 @@ plugins=(
   thefuck
   tmux
   vscode
-  z
-  zsh-autosuggestions
   zsh-interactive-cd
   zsh-navigation-tools
-  zsh-syntax-highlighting
 )
 
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
@@ -68,7 +65,7 @@ docker_cleanup() {
     echo "Cleaning up Docker..."
     docker system prune -af
     docker volume prune -f
-    echo "Docker cleanup complete!"
+    echo "Docker cl—eanup complete!"
 }
 
 clip () {
@@ -78,4 +75,8 @@ clip () {
 	xclip -sel clip
     fi
 }
+
+# SDKMAN!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
