@@ -85,4 +85,8 @@ create_symlink "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
 echo "Setting up Git configuration..."
 create_symlink "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 
+echo "Setting up Tmux configuration..."
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+create_synlink "$DOTFILES_DIR/.tmux.conf" "$HOME/.tmux.conf"
+
 echo "Dotfiles setup complete!"
