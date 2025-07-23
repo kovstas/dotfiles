@@ -166,8 +166,9 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
-vim.o.autowriteall = true
+vim.opt.autowrite = true
 
+vim.opt.autoindent = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
