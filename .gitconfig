@@ -2,6 +2,7 @@
 	whitespace = space-before-tab,-indent-with-non-tab,trailing-space
 	trustctime = false
 	editor = nvim
+	autocrlf = input
 [gpg]
 	format = ssh
 [gpg "ssh"]
