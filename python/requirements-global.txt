@@ -1,0 +1,7 @@
+black==24.3.0
+flake8==6.1.0
+mypy==1.10.0
+isort==5.12.0
+ruff==0.12.7
+debugpy==1.8.15
+pytest==8.4.1

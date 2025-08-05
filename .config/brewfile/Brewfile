@@ -54,6 +54,7 @@ brew "openai-whisper"
 brew "pipenv"
 brew "postgresql@14"
 brew "pyenv"
+brew "pyenv-virtualenv"
 brew "python" # Python 3.x
 brew "ripgrep"
 brew "sbt"
