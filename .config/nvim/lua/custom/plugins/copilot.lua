@@ -1,29 +1,39 @@
 return {
   'zbirenbaum/copilot.lua',
   event = 'VeryLazy',
-  config = function()
-    require('copilot').setup {
-      suggestion = {
-        enabled = true,
-        auto_trigger = true,
-        accept = true,
+  opts = {
+    suggestion = {
+      enabled = true, -- allow suggestions when enabled
+      auto_trigger = true, -- feel free to set false if you prefer manual triggers
+      keymap = {
+        accept = false,
+        accept_word = false,
+        accept_line = false,
+        next = false,
+        prev = false,
+        dismiss = false,
       },
-      panel = {
-        enabled = true,
-      },
-      filetypes = {
-        ['*'] = true,
-      },
-    }
+    },
+    panel = { enabled = true },
+    filetypes = { ['*'] = true },
+  },
+  config = function(_, opts)
+    require('copilot').setup(opts)
 
+    -- Start disabled by default
+    local ok, cmd = pcall(require, 'copilot.command')
+    if ok then
+      cmd.disable()
+    end
+
+    -- Optional: your <S-Tab> accept mapping (works only when Copilot is enabled)
     vim.keymap.set('i', '<S-Tab>', function()
-      if require('copilot.suggestion').is_visible() then
-        require('copilot.suggestion').accept()
-      else
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<S-Tab>', true, false, true), 'n', false)
+      local ok_s, s = pcall(require, 'copilot.suggestion')
+      if ok_s and s.is_visible() then
+        s.accept()
+        return ''
       end
-    end, {
-      silent = true,
-    })
+      return '<S-Tab>'
+    end, { expr = true, silent = true, replace_keycodes = false })
   end,
 }

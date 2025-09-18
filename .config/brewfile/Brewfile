@@ -15,6 +15,7 @@ brew "ansible"
 brew "ansible@8"
 brew "copilot-cli"
 brew "awscli"
+brew "charmbracelet/tap/crush"
 brew "codecrafters-io/tap/codecrafters" # Codecrafters CLI for coding exercises
 brew "colima", restart_service: :changed
 brew "coreutils"

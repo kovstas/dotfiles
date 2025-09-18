@@ -28,7 +28,6 @@ plugins=(
   sdk
   starship
   systemd
-  tailscale
   terraform
   thefuck
   tmux
