@@ -1,7 +1,7 @@
 return {
   black = 0xff181819,
   white = 0xffe2e2e3,
-  red = 0xfffc5d7c,
+  red = 0xffca2c92,
   green = 0xff9ed072,
   blue = 0xff76cce0,
   yellow = 0xffe7c664,
@@ -19,8 +19,8 @@ return {
     bg = 0xc02c2e34,
     border = 0xff7f8490,
   },
-  bg1 = 0x66363944,
-  bg2 = 0x66414550,
+  bg1 = 0x44363944,
+  bg2 = 0x44414550,
 
   rainbow = {
     0xffff007c,
