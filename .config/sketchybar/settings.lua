@@ -43,7 +43,7 @@ return {
     corner_radius = 5,
   },
 
-  icons = "sketchybar-app-font:Regular:13.0", -- alternatively available: NerdFont
+  icons = "sketchybar-app-font:Regular:14.0", -- alternatively available: NerdFont
 
   font = {
     text = "JetBrainsMono Nerd Font", -- Used for text

@@ -178,7 +178,7 @@ space_window_observer:subscribe("space_windows_change", function(env)
       for i, app in ipairs(apps) do
         no_app = false
         local app_name = app["app-name"]
-        local lookup = app_icons[app_name]
+        local lookup = app_icons[app_name] or app_icons[app_name:lower()]
         local icon = ((lookup == nil) and app_icons["default"] or lookup)
         icon_line = icon_line .. " " .. icon
       end
