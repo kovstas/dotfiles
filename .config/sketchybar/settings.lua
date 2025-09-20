@@ -3,11 +3,11 @@ local icons = require("icons")
 
 return {
   paddings = 3,
-  group_paddings = 5,
+  group_paddings = 4,
   modes = {
     main = {
       icon = icons.apple,
-      color = colors.rainbow[1],
+      color = colors.magenta,
     },
     service = {
       icon = icons.nuke,
