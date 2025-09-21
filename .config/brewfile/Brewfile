@@ -42,6 +42,7 @@ brew "jq" # Command-line JSON processor
 brew "k9s" # Kubernetes CLI tool
 brew "e1s" # E1S is a tool for managing and deploying serverless applications
 brew "kubernetes-cli" # Kubernetes command-line tool
+brew "lazygit"
 brew "libxlsxwriter" # C library for writing Excel XLSX files
 brew "lua"
 brew "mas" # Mac App Store CLI
