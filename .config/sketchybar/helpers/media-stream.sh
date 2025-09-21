@@ -6,6 +6,7 @@ media-control stream | \
             title=$(jq -r '.payload.title' <<< "$line")
             artist=$(jq -r '.payload.artist' <<< "$line")
 	    artwork=$(jq -r '.payload.artworkData' <<< "$line")
-           sketchybar --trigger media_stream_changed playback="$playback" title="$title" artist="$artist" artwork="$artwork"
+	    app_id=$(jq -r '.payload.bundleIdentifier' <<< "$line")
+           sketchybar --trigger media_stream_changed playback="$playback" title="$title" artist="$artist" artwork="$artwork" app_id="$app_id"
         fi
     done
