@@ -13,6 +13,11 @@ local media = sbar.add("item", {
     color = colors.magenta,
   },
   label = {
+    font = {
+      family = settings.font.text,
+      style = settings.font.style_map["Bold"],
+      size = 13.0,
+    },
     max_chars = 50,
     padding_left = 8,
   },
