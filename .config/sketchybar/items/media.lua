@@ -1,7 +1,17 @@
 local icons = require("icons")
+local colors = require("colors")
+local settings = require("settings")
+
+local app_bundle_mapping = {
+  ["com.spotify.client"] = ":spotify:",
+}
 
 local media = sbar.add("item", {
   position = "right",
+  icon = {
+    font = settings.icons,
+    color = colors.magenta,
+  },
   label = {
     max_chars = 50,
     padding_left = 8,
@@ -43,7 +53,10 @@ sbar.add("item", {
 })
 
 media:subscribe("media_stream_changed", function(env)
-  media:set({ label = env.artist .. " - " .. env.title })
+  local lookup = app_bundle_mapping[env.app_id]
+  if not (lookup == nil) then
+    media:set({ icon = { string = lookup }, label = env.artist .. " - " .. env.title })
+  end
 end)
 
 media:subscribe("mouse.clicked", function(_)
