@@ -62,6 +62,7 @@ brew "ripgrep"
 brew "sbt"
 brew "scala"
 brew "sdkman-cli"
+brew "session-manager-plugin"
 brew "sniffnet" # Network monitoring tool
 brew "sqlite"
 brew "sshpass"
