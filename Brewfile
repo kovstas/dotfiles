@@ -48,10 +48,10 @@ brew "libxlsxwriter" # C library for writing Excel XLSX files
 brew "lua"
 brew "mas" # Mac App Store CLI
 brew "maven"
+brew "media-control"
 brew "midnight-commander"
 brew "neovim"
 brew "node"
-brew "nowplaying-cli"
 brew "nvm"
 brew "openai-whisper"
 brew "pipenv"
