@@ -69,6 +69,9 @@ create_symlink "$DOTFILES_DIR/.config/ghostty" "$HOME/.config/ghostty"
 echo "Setting up Neovim..."
 create_symlink "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim"
 
+echo "Setting up Neovim..."
+create_symlink "$DOTFILES_DIR/Brewfile" "$HOME/Brewfile"
+
 # Setup Starship
 echo "Setting up Starship..."
 create_symlink "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
