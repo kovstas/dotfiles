@@ -82,3 +82,6 @@ export SDKMAN_DIR="$HOME/.sdkman"
 eval "$(pyenv init --path)"
 eval "$(pyenv virtualenv-init -)"
 
+
+# Created by `pipx` on 2025-09-23 14:10:49
+export PATH="$PATH:/Users/kovstas/.local/bin"
