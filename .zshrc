@@ -36,6 +36,8 @@ plugins=(
   zsh-navigation-tools
 )
 
+export ZSH_TMUX_AUTOSTART=true
+
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
 zstyle ':omz:plugins:alias-finder' longer yes # disabled by default
 zstyle ':omz:plugins:alias-finder' cheaper yes # disabled by default
