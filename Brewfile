@@ -6,7 +6,6 @@ tap "coursier/formulas"
 tap "felixkratz/formulae"
 tap "hashicorp/tap"
 tap "homebrew/autoupdate"
-tap "homebrew/services"
 tap "keidarcy/tap"
 tap "mediosz/tap"
 tap "nikitabobko/tap"
@@ -14,7 +13,7 @@ tap "sdkman/tap"
 
 brew "ansible"
 brew "ansible@8"
-brew "copilot-cli"
+brew "copilot"
 brew "awscli"
 brew "crush"
 brew "codecrafters-io/tap/codecrafters" # Codecrafters CLI for coding exercises
@@ -35,6 +34,7 @@ brew "git-lfs" # Git Large File Storage
 brew "git"
 brew "glib" # Required by various applications
 brew "grpcurl" # CLI tool for interacting with gRPC servers
+brew "nextdns"
 brew "harfbuzz"
 brew "helm" # Kubernetes package manager
 brew "htop"
