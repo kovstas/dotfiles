@@ -38,6 +38,11 @@ plugins=(
 
 export ZSH_TMUX_AUTOSTART=true
 
+if [[ "$(uname)" =~ Darwin ]]; then
+  alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+  export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+fi
+
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
 zstyle ':omz:plugins:alias-finder' longer yes # disabled by default
 zstyle ':omz:plugins:alias-finder' cheaper yes # disabled by default
@@ -84,6 +89,3 @@ export SDKMAN_DIR="$HOME/.sdkman"
 eval "$(pyenv init --path)"
 eval "$(pyenv virtualenv-init -)"
 
-
-# Created by `pipx` on 2025-09-23 14:10:49
-export PATH="$PATH:/Users/kovstas/.local/bin"
