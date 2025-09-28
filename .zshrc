@@ -36,7 +36,6 @@ plugins=(
   zsh-navigation-tools
 )
 
-export ZSH_TMUX_AUTOSTART=true
 
 if [[ "$(uname)" =~ Darwin ]]; then
   alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
