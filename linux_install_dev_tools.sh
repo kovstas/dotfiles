@@ -77,14 +77,34 @@ fi
 # HashiCorp Tools (Terraform, TFLint)
 # ----------------------------------------------------------------------
 
+# ----------------------------------------------------------------------
+# HashiCorp Tools (Terraform, TFLint)
+# ----------------------------------------------------------------------
+
 if ! command -v terraform >/dev/null 2>&1; then
-  echo "Installing Terraform and TFLint..."
+  echo "Installing Terraform..."
   curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
   echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
     https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
     sudo tee /etc/apt/sources.list.d/hashicorp.list
   sudo apt update
-  sudo apt install -y terraform tflint
+  sudo apt install -y terraform
+fi
+
+if ! command -v tflint >/dev/null 2>&1; then
+  echo "Installing TFLint..."
+  if snap list tflint >/dev/null 2>&1; then
+    echo "TFLint already installed via snap."
+  elif command -v snap >/dev/null 2>&1; then
+    sudo snap install tflint
+  else
+    echo "Snap not available, installing TFLint from GitHub release..."
+    TFLINT_VERSION=$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
+    curl -Lo tflint.zip "https://github.com/terraform-linters/tflint/releases/download/${TFLINT_VERSION}/tflint_linux_amd64.zip"
+    unzip tflint.zip -d tflint_bin
+    sudo install tflint_bin/tflint /usr/local/bin/
+    rm -rf tflint.zip tflint_bin
+  fi
 fi
 
 # ----------------------------------------------------------------------
