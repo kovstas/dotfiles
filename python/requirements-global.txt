@@ -6,4 +6,5 @@ ruff==0.12.7
 debugpy==1.8.15
 pytest==8.4.1
 uv==0.8.6
-ipython==9.5.0
+ipython==9.6.0
+git+https://github.com/nvbn/thefuck.git@master

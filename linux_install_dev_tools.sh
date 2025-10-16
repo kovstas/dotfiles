@@ -8,6 +8,7 @@ set -euo pipefail
 # ======================================================================
 
 echo "Updating package index..."
+sudo add-apt-repository ppa:neovim-ppa/unstable
 sudo apt update -y
 sudo apt upgrade -y
 
@@ -49,7 +50,7 @@ sudo apt install -y \
   neovim \
   python3 \
   python3-pip \
-  openjdk-17-jdk \
+  openjdk-25-jdk \
   maven \
   lua5.4 \
   nodejs \
@@ -72,10 +73,6 @@ if ! command -v gh >/dev/null 2>&1; then
   sudo apt update
   sudo apt install -y gh
 fi
-
-# ----------------------------------------------------------------------
-# HashiCorp Tools (Terraform, TFLint)
-# ----------------------------------------------------------------------
 
 # ----------------------------------------------------------------------
 # HashiCorp Tools (Terraform, TFLint)
@@ -176,12 +173,6 @@ if ! command -v starship >/dev/null 2>&1; then
   echo "Installing Starship prompt..."
   curl -sS https://starship.rs/install.sh | sh -s -- -y
 fi
-
-# ----------------------------------------------------------------------
-# TheFuck (Python command corrector)
-# ----------------------------------------------------------------------
-
-pip3 install --user thefuck
 
 # ----------------------------------------------------------------------
 # LazyGit

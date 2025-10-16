@@ -42,6 +42,12 @@ if [[ "$(uname)" =~ Darwin ]]; then
   export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 fi
 
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+
+eval "$(pyenv init --path)"
+eval "$(pyenv virtualenv-init -)"
+
 zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
 zstyle ':omz:plugins:alias-finder' longer yes # disabled by default
 zstyle ':omz:plugins:alias-finder' cheaper yes # disabled by default
@@ -84,7 +90,4 @@ clip () {
 # SDKMAN!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-eval "$(pyenv init --path)"
-eval "$(pyenv virtualenv-init -)"
 
