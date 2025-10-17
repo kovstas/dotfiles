@@ -53,8 +53,6 @@ sudo apt install -y \
   openjdk-25-jdk \
   maven \
   lua5.4 \
-  nodejs \
-  npm \
   postgresql-client \
   unzip
 
@@ -141,6 +139,8 @@ fi
 if [ ! -d "$HOME/.nvm" ]; then
   echo "Installing NVM..."
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  nvm install --lts
+  nvm use --lts
 fi
 
 # ----------------------------------------------------------------------
