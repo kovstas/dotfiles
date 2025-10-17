@@ -70,17 +70,17 @@ fi
 
 
   # Setup SketchyBar config
-	create_symlink "$DOTFILES_DIR/.config/sketchybar" "$HOME/.config/sketchybar"
-	echo "Restarting sketchybar service..."
-	brew services restart sketchybar
+  create_symlink "$DOTFILES_DIR/.config/sketchybar" "$HOME/.config/sketchybar"
+  echo "Restarting sketchybar service..."
+  brew services restart sketchybar
 
-	# Setup borders
-	echo "Setting up borders..."
-	create_symlink "$DOTFILES_DIR/.config/borders" "$HOME/.config/borders"
+  # Setup borders
+  echo "Setting up borders..."
+  create_symlink "$DOTFILES_DIR/.config/borders" "$HOME/.config/borders"
 
-	# Setup Ghostty
-	echo "Setting up Ghostty..."
-	create_symlink "$DOTFILES_DIR/.config/ghostty" "$HOME/.config/ghostty"
+  # Setup Ghostty
+  echo "Setting up Ghostty..."
+  create_symlink "$DOTFILES_DIR/.config/ghostty" "$HOME/.config/ghostty"
 
 fi
 
