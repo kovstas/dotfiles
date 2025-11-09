@@ -45,9 +45,6 @@ echo "Installing SbarLua..."
 echo "Setting up Neovim..."
 create_symlink "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim"
 
-echo "Setting up Neovim..."
-create_symlink "$DOTFILES_DIR/Brewfile" "$HOME/Brewfile"
-
 # Setup Starship
 echo "Setting up Starship..."
 create_symlink "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
@@ -57,16 +54,19 @@ if [[ "$(uname)" == "Darwin" ]]; then
   echo "Setting up Aerospace..."
   create_symlink "$DOTFILES_DIR/.aerospace.toml" "$HOME/.aerospace.toml"
 
+  echo "Setting up Brew..."
+  create_symlink "$DOTFILES_DIR/Brewfile" "$HOME/Brewfile"
+
   # Setup SketchyBar and install its dependencies
-echo "Setting up SketchyBar..."
+  echo "Setting up SketchyBar..."
 
-# Create Fonts directory if it doesn't exist
-mkdir -p "$HOME/Library/Fonts"
+  # Create Fonts directory if it doesn't exist
+  mkdir -p "$HOME/Library/Fonts"
 
-if [ ! -f "$HOME/Library/Fonts/sketchybar-app-font.ttf" ]; then
+  if [ ! -f "$HOME/Library/Fonts/sketchybar-app-font.ttf" ]; then
     echo "Downloading sketchybar-app-font..."
     curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v2.0.25/sketchybar-app-font.ttf -o "$HOME/Library/Fonts/sketchybar-app-font.ttf"
-fi
+  fi
 
 
   # Setup SketchyBar config
@@ -92,7 +92,9 @@ create_symlink "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
 echo "Setting up Git configuration..."
 create_symlink "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
 if [[ "$(uname)" == "Darwin" ]]; then
-  create_symlink "$DOTFILES_DIR/.gitconfig-1password" "$HOME/.gitconfig-1password"
+  create_symlink "$DOTFILES_DIR/.gitconfig-1password-mac" "$HOME/.gitconfig-1password-mac"
+else
+  create_symlink "$DOTFILES_DIR/.gitconfig-1password-linux" "$HOME/.gitconfig-1password-linux"
 fi
 
 echo "Setting up Tmux configuration..."

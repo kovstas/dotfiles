@@ -10,4 +10,6 @@
 [include]
     path = ~/.gitconfig.local
 [includeIf "exists:/Applications/1Password.app/"]
-    path = ~/.gitconfig-1password
+    path = ~/.gitconfig-1password-mac
+[includeIf "exists:/opt/1Password/"]
+    path = ~/.gitconfig-1password-linux
