@@ -4,6 +4,7 @@
 
 # Get the directory where this script is located (dotfiles directory)
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTCONFIG_DIR="$DOTFILES_DIR/dotconfig"
 
 echo "Setting up dotfiles from: $DOTFILES_DIR"
 
@@ -43,11 +44,11 @@ echo "Installing SbarLua..."
 
 # Setup Nvim
 echo "Setting up Neovim..."
-create_symlink "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim"
+create_symlink "$DOTCONFIG_DIR/nvim" "$HOME/.config/nvim"
 
 # Setup Starship
 echo "Setting up Starship..."
-create_symlink "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
+create_symlink "$DOTCONFIG_DIR/starship.toml" "$HOME/.config/starship.toml"
 
 if [[ "$(uname)" == "Darwin" ]]; then
   # Setup Aerospace
@@ -70,17 +71,17 @@ if [[ "$(uname)" == "Darwin" ]]; then
 
 
   # Setup SketchyBar config
-  create_symlink "$DOTFILES_DIR/.config/sketchybar" "$HOME/.config/sketchybar"
+  create_symlink "$DOTCONFIG_DIR/sketchybar" "$HOME/.config/sketchybar"
   echo "Restarting sketchybar service..."
   brew services restart sketchybar
 
   # Setup borders
   echo "Setting up borders..."
-  create_symlink "$DOTFILES_DIR/.config/borders" "$HOME/.config/borders"
+  create_symlink "$DOTCONFIG_DIR/borders" "$HOME/.config/borders"
 
   # Setup Ghostty
   echo "Setting up Ghostty..."
-  create_symlink "$DOTFILES_DIR/.config/ghostty" "$HOME/.config/ghostty"
+  create_symlink "$DOTCONFIG_DIR/ghostty" "$HOME/.config/ghostty"
 
 fi
 
