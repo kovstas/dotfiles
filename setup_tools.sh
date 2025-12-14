@@ -4,7 +4,10 @@
 
 # Get the directory where this script is located (dotfiles directory)
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOTCONFIG_DIR="$DOTFILES_DIR/dotconfig"
+COMMON_DIR="$DOTFILES_DIR/common"
+MAC_DIR="$DOTFILES_DIR/mac"
+MAC_DOTCONFIG_DIR="$MAC_DIR/dotconfig"
+GIT_CONFIG_DIR="$DOTFILES_DIR/git_config"
 
 echo "Setting up dotfiles from: $DOTFILES_DIR"
 
@@ -38,25 +41,25 @@ create_symlink() {
     fi
 }
 
-# SbarLua
-echo "Installing SbarLua..."
-(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -rf /tmp/SbarLua/)
-
 # Setup Nvim
 echo "Setting up Neovim..."
-create_symlink "$DOTCONFIG_DIR/nvim" "$HOME/.config/nvim"
+create_symlink "$COMMON_DIR/dotconfig/nvim" "$HOME/.config/nvim"
 
 # Setup Starship
 echo "Setting up Starship..."
-create_symlink "$DOTCONFIG_DIR/starship.toml" "$HOME/.config/starship.toml"
+create_symlink "$COMMON_DIR/dotconfig/starship.toml" "$HOME/.config/starship.toml"
 
 if [[ "$(uname)" == "Darwin" ]]; then
+  # SbarLua
+  echo "Installing SbarLua..."
+  (git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -rf /tmp/SbarLua/)
+
   # Setup Aerospace
   echo "Setting up Aerospace..."
-  create_symlink "$DOTFILES_DIR/.aerospace.toml" "$HOME/.aerospace.toml"
+  create_symlink "$MAC_DIR/.aerospace.toml" "$HOME/.aerospace.toml"
 
   echo "Setting up Brew..."
-  create_symlink "$DOTFILES_DIR/Brewfile" "$HOME/Brewfile"
+  create_symlink "$MAC_DIR/Brewfile" "$HOME/Brewfile"
 
   # Setup SketchyBar and install its dependencies
   echo "Setting up SketchyBar..."
@@ -71,35 +74,35 @@ if [[ "$(uname)" == "Darwin" ]]; then
 
 
   # Setup SketchyBar config
-  create_symlink "$DOTCONFIG_DIR/sketchybar" "$HOME/.config/sketchybar"
+  create_symlink "$MAC_DOTCONFIG_DIR/sketchybar" "$HOME/.config/sketchybar"
   echo "Restarting sketchybar service..."
   brew services restart sketchybar
 
   # Setup borders
   echo "Setting up borders..."
-  create_symlink "$DOTCONFIG_DIR/borders" "$HOME/.config/borders"
+  create_symlink "$MAC_DOTCONFIG_DIR/borders" "$HOME/.config/borders"
 
   # Setup Ghostty
   echo "Setting up Ghostty..."
-  create_symlink "$DOTCONFIG_DIR/ghostty" "$HOME/.config/ghostty"
+  create_symlink "$MAC_DOTCONFIG_DIR/ghostty" "$HOME/.config/ghostty"
 
 fi
 
 # Setup Zsh
 echo "Setting up Zsh..."
-create_symlink "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+create_symlink "$COMMON_DIR/.zshrc" "$HOME/.zshrc"
 
 # Setup .gitconfig
 echo "Setting up Git configuration..."
-create_symlink "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
+create_symlink "$GIT_CONFIG_DIR/.gitconfig" "$HOME/.gitconfig"
 if [[ "$(uname)" == "Darwin" ]]; then
-  create_symlink "$DOTFILES_DIR/.gitconfig-1password-mac" "$HOME/.gitconfig-1password-mac"
+  create_symlink "$GIT_CONFIG_DIR/.gitconfig-1password-mac" "$HOME/.gitconfig-1password-mac"
 else
-  create_symlink "$DOTFILES_DIR/.gitconfig-1password-linux" "$HOME/.gitconfig-1password-linux"
+  create_symlink "$GIT_CONFIG_DIR/.gitconfig-1password-linux" "$HOME/.gitconfig-1password-linux"
 fi
 
 echo "Setting up Tmux configuration..."
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-create_symlink "$DOTFILES_DIR/.tmux.conf" "$HOME/.tmux.conf"
+create_symlink "$COMMON_DIR/.tmux.conf" "$HOME/.tmux.conf"
 
 echo "Dotfiles setup complete!"
