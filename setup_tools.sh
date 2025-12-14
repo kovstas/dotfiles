@@ -112,6 +112,9 @@ if [[ "$(uname)" == "Linux" ]]; then
   echo "Setting up vicinae"
   create_symlink "$LINUX_DOTCONFIG_DIR/vicinae" "$HOME/.config/vicinae"
 
+  echo "Setting up vicinae"
+  create_symlink "$LINUX_DOTCONFIG_DIR/ashell" "$HOME/.config/ashell"
+
 fi
 
 # Setup Zsh
