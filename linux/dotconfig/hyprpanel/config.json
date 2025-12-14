@@ -3,7 +3,7 @@
     "/"
   ],
   "scalingPriority": "hyprland",
-  "menus.clock.weather.location": "Den Haag",
+  "menus.clock.weather.location": "The Hague",
   "menus.clock.time.military": true,
   "menus.dashboard.stats.enable_gpu": false,
   "menus.dashboard.shortcuts.left.shortcut1.command": "google-chrome-beta",
@@ -489,5 +489,7 @@
   "menus.dashboard.directories.left.directory1.command": "bash -c \"thunar $HOME/Downloads/\"",
   "menus.dashboard.directories.left.directory2.command": "bash -c \"thunar $HOME/Videos/\"",
   "menus.dashboard.directories.right.directory2.command": "bash -c \"thunar $HOME/Pictures/\"",
-  "menus.dashboard.directories.right.directory3.command": "bash -c \"thunar $HOME/\""
+  "menus.dashboard.directories.right.directory3.command": "bash -c \"thunar $HOME/\"",
+  "menus.clock.weather.key": "/home/kovstas/.config/hyprpanel/secrets.json",
+  "menus.clock.weather.enabled": true
 }
