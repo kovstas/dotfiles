@@ -6,7 +6,9 @@
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMMON_DIR="$DOTFILES_DIR/common"
 MAC_DIR="$DOTFILES_DIR/mac"
+LINUX_DIR="$DOTFILES_DIR/linux"
 MAC_DOTCONFIG_DIR="$MAC_DIR/dotconfig"
+LINUX_DOTCONFIG_DIR="$LINUX_DIR/dotconfig"
 GIT_CONFIG_DIR="$DOTFILES_DIR/git_config"
 
 echo "Setting up dotfiles from: $DOTFILES_DIR"
@@ -85,6 +87,30 @@ if [[ "$(uname)" == "Darwin" ]]; then
   # Setup Ghostty
   echo "Setting up Ghostty..."
   create_symlink "$MAC_DOTCONFIG_DIR/ghostty" "$HOME/.config/ghostty"
+
+fi
+
+if [[ "$(uname)" == "Linux" ]]; then
+  echo "Setting up Alacritty"
+  create_symlink "$LINUX_DOTCONFIG_DIR/alacritty" "$HOME/.config/alacritty"
+
+  echo "Setting up Autostart"
+  create_symlink "$LINUX_DOTCONFIG_DIR/autostart" "$HOME/.config/autostart"
+
+  echo "Setting up Btop"
+  create_symlink "$LINUX_DOTCONFIG_DIR/btop" "$HOME/.config/btop"
+
+  echo "Setting up Hyprland"
+  create_symlink "$LINUX_DOTCONFIG_DIR/hypr" "$HOME/.config/hypr"
+
+  echo "Setting up background"
+  create_symlink "$LINUX_DIR/assets/backgrounds" "$HOME/.local/share/backgrounds"
+
+  echo "Setting up scripts dir"
+  create_symlink "$LINUX_DOTCONFIG_DIR/scripts" "$HOME/.config/scripts"
+
+  echo "Setting up vicinae"
+  create_symlink "$LINUX_DOTCONFIG_DIR/vicinae" "$HOME/.config/vicinae"
 
 fi
 
