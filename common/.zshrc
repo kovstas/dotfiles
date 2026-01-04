@@ -92,3 +92,6 @@ clip () {
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+# ESP32 Init
+alias get_idf='. $HOME/esp/esp-idf/export.sh > /dev/null 2>&1'
+
