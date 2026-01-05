@@ -24,6 +24,7 @@ plugins=(
   nvm
   pip
   python
+  rust
   sbt
   sdk
   starship
@@ -41,7 +42,7 @@ if [[ "$(uname)" =~ Darwin ]]; then
   alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
   export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 else 
-  export PATH="$PATH:/home/kovstas/.local/share/coursier/bin"
+  export PATH="$PATH:$HOME/.local/share/coursier/bin"
 fi
 
 export PYENV_ROOT="$HOME/.pyenv"
@@ -94,6 +95,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # ESP32 Init
 alias get_idf='. $HOME/esp/esp-idf/export.sh > /dev/null 2>&1'
+alias get_esp='. $HOME/export-esp.sh > /dev/null 2>&1'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
