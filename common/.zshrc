@@ -129,4 +129,7 @@ else
 fi
 unset __mamba_setup
 # <<< mamba initialize <<<
+if [ -f ~/.zshrc.local ]; then
+    source ~/.zshrc.local || echo "Warning: Failed to source ~/.zshrc.local"
+fi
 
