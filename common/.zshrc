@@ -62,6 +62,7 @@ zstyle ':completion:*' menu select
 source $ZSH/oh-my-zsh.sh
 
 alias sshlist='sudo lsof -i -n | grep ssh'
+alias dict='ollama run llama3.2:1b "Provide a concise dictionary definition and one example for: "'
 
 # Get bundle id
 getappid() {
@@ -88,6 +89,8 @@ clip () {
 	xclip -sel clip
     fi
 }
+
+export SDCV_PAGER=less
 
 # SDKMAN!
 export SDKMAN_DIR="$HOME/.sdkman"
