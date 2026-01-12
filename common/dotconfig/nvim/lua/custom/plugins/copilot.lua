@@ -23,7 +23,10 @@ return {
     -- Start disabled by default
     local ok, cmd = pcall(require, 'copilot.command')
     if ok then
-      cmd.disable()
+      local gh_copilot_enabled = os.getenv 'GH_COPILOT_ENABLED'
+      if gh_copilot_enabled == nil or gh_copilot_enabled ~= 'true' then
+        cmd.disable()
+      end
     end
 
     -- Optional: your <S-Tab> accept mapping (works only when Copilot is enabled)
