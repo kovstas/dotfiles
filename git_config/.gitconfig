@@ -3,6 +3,7 @@
 	trustctime = false
 	editor = nvim
 	autocrlf = input
+	excludesfile = ~/.gitignore_global
 [gpg]
 	format = ssh
 [commit]

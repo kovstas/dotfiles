@@ -127,6 +127,7 @@ create_symlink "$COMMON_DIR/.zshrc" "$HOME/.zshrc"
 # Setup .gitconfig
 echo "Setting up Git configuration..."
 create_symlink "$GIT_CONFIG_DIR/.gitconfig" "$HOME/.gitconfig"
+create_symlink "$GIT_CONFIG_DIR/.gitignore_global" "$HOME/.gitignore_global"
 if [[ "$(uname)" == "Darwin" ]]; then
   create_symlink "$GIT_CONFIG_DIR/.gitconfig-1password-mac" "$HOME/.gitconfig-1password-mac"
 else
