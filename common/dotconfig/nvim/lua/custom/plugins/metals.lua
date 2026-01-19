@@ -40,8 +40,9 @@ return {
 
       -- Example of settings
       metals_config.settings = {
-        serverVersion = 'latest.stable',
+        serverVersion = '1.6.4',
         showImplicitArguments = true,
+        startMcpServer = true,
         excludedPackages = { 'akka.actor.typed.javadsl', 'com.github.swagger.akka.javadsl' },
         bloopJvmProperties = {
           '-Xmx4G',
