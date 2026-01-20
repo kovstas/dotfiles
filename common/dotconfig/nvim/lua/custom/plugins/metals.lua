@@ -45,12 +45,12 @@ return {
         startMcpServer = true,
         excludedPackages = { 'akka.actor.typed.javadsl', 'com.github.swagger.akka.javadsl' },
         bloopJvmProperties = {
-          '-Xmx4G',
+          '-Xmx8G',
           '-Xss8M',
         },
         -- Java 21 module system exports for Metals JavacMtags (harmless for Java 17)
         serverProperties = {
-          '-Xmx4G',
+          '-Xmx8G',
           '-Xss4m',
           '--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
           '--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
