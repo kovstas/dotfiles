@@ -795,9 +795,12 @@ require('lazy').setup({
         -- Conform can also run multiple formatters sequentially
         python = { 'isort', 'black', 'ruff' },
         scala = { 'scalafmt' },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        -- TypeScript/JavaScript - prettierd is a daemon for fast formatting
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -974,6 +977,7 @@ require('lazy').setup({
         'c',
         'diff',
         'html',
+        'javascript',
         'lua',
         'luadoc',
         'markdown',
@@ -983,6 +987,8 @@ require('lazy').setup({
         'scala',
         'terraform',
         'hcl',
+        'tsx',
+        'typescript',
         'query',
         'vim',
         'vimdoc',
