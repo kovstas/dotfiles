@@ -1,2 +1,3 @@
 linux/dotconfig/hyprpanel/secrets.json
 !linux/dotconfig/hyprpanel/secrets.json.tpl
+common/dotconfig/nvim/lazy-lock.json
