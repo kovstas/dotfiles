@@ -40,17 +40,18 @@ EOF
     fi
 
 elif [[ "$OS_TYPE" == "Linux" ]]; then
-    # Linux Logic
-    OP_PATH="/opt/1Password/op-ssh-sign"
-    if [ -f "$OP_PATH" ]; then
+    # Linux Logic — use wrapper that switches between local 1Password
+    # and ssh-keygen (for forwarded agent over SSH)
+    WRAPPER_PATH="$HOME/.local/bin/op-ssh-sign-wrapper.sh"
+    if [ -f "$WRAPPER_PATH" ]; then
         cat >> "$CONFIG_FILE" <<EOF
 
 [gpg "ssh"]
-    program = "$OP_PATH"
+    program = "$WRAPPER_PATH"
 EOF
-        echo "🐧 Linux 1Password detected."
+        echo "🐧 Linux 1Password signing wrapper configured."
     else
-        echo "⚠️  1Password binary not found at $OP_PATH"
+        echo "⚠️  Signing wrapper not found at $WRAPPER_PATH. Run setup_tools.sh first."
     fi
 fi
 

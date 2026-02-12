@@ -91,6 +91,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 if [[ "$(uname)" == "Linux" ]]; then
+  echo "Setting up 1Password SSH signing wrapper..."
+  mkdir -p "$HOME/.local/bin"
+  create_symlink "$GIT_CONFIG_DIR/op-ssh-sign-wrapper.sh" "$HOME/.local/bin/op-ssh-sign-wrapper.sh"
+
   echo "Setting up Alacritty"
   create_symlink "$LINUX_DOTCONFIG_DIR/alacritty" "$HOME/.config/alacritty"
 
