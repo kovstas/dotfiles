@@ -28,15 +28,27 @@ fi
 OS_TYPE=$(uname -s)
 
 if [[ "$OS_TYPE" == "Darwin" ]]; then
-    # macOS Logic
-    OP_PATH="/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-    if [ -d "/Applications/1Password.app" ]; then
+    # macOS Logic — use cross-platform wrapper that switches between
+    # local 1Password and ssh-keygen (for forwarded agent over SSH)
+    WRAPPER_PATH="$HOME/.local/bin/op-ssh-sign-wrapper.sh"
+    if [ -f "$WRAPPER_PATH" ]; then
         cat >> "$CONFIG_FILE" <<EOF
+
+[gpg "ssh"]
+    program = "$WRAPPER_PATH"
+EOF
+        echo "🍎 macOS 1Password signing wrapper configured."
+    else
+        # Fallback to direct 1Password binary if wrapper not deployed yet
+        OP_PATH="/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+        if [ -d "/Applications/1Password.app" ]; then
+            cat >> "$CONFIG_FILE" <<EOF
 
 [gpg "ssh"]
     program = "$OP_PATH"
 EOF
-        echo "🍎 macOS 1Password detected."
+            echo "🍎 macOS 1Password detected (direct, run setup_tools.sh for wrapper)."
+        fi
     fi
 
 elif [[ "$OS_TYPE" == "Linux" ]]; then

@@ -40,7 +40,11 @@ plugins=(
 
 if [[ "$(uname)" =~ Darwin ]]; then
   alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
-  export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+  # Only set 1Password agent socket when running locally.
+  # When connected via SSH with agent forwarding, preserve the forwarded agent.
+  if [[ -z "$SSH_TTY" ]]; then
+    export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+  fi
 else 
   export PATH="$PATH:$HOME/.local/share/coursier/bin"
 fi
