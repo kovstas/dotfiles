@@ -139,6 +139,10 @@ else
   create_symlink "$GIT_CONFIG_DIR/.gitconfig-1password-linux" "$HOME/.gitconfig-1password-linux"
 fi
 
+echo "Setting up SSH config (local network agent forwarding)..."
+SSH_CONFIG_DIR="$DOTFILES_DIR/ssh_config"
+"$SSH_CONFIG_DIR/generate_ssh_config.sh"
+
 echo "Setting up Tmux configuration..."
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 create_symlink "$COMMON_DIR/.tmux.conf" "$HOME/.tmux.conf"

@@ -1,0 +1,25 @@
+# ----------------------------------------------------------------------
+# Local Network SSH Configuration
+# Forward agent to all hosts on the local network (192.168.68.*)
+# so any machine with this config can connect to each other.
+# ----------------------------------------------------------------------
+
+Host 192.168.68.*
+    ForwardAgent yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 120
+
+# ----------------------------------------------------------------------
+# 1Password SSH Agent (macOS)
+# Use 1Password agent socket only when NOT inside an SSH session,
+# so forwarded agents from other machines (iPad, etc.) are not overridden.
+# ----------------------------------------------------------------------
+Match host * exec "test -z '$SSH_TTY' && test $(uname -s) = Darwin"
+    IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+# ----------------------------------------------------------------------
+# 1Password SSH Agent (Linux)
+# Same TTY check for Linux with the Linux socket path.
+# ----------------------------------------------------------------------
+Match host * exec "test -z '$SSH_TTY' && test $(uname -s) = Linux"
+    IdentityAgent ~/.1password/agent.sock

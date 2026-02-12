@@ -23,6 +23,9 @@ dotfiles/
 │   ├── .gitignore_global   # Global gitignore
 │   ├── generate_gitconfig_local.sh  # Interactive local config generator
 │   └── op-ssh-sign-wrapper.sh       # 1Password SSH signing wrapper (Linux)
+├── ssh_config/             # SSH configuration
+│   ├── config_local_network          # Local network agent forwarding + 1Password
+│   └── generate_ssh_config.sh        # Adds Include directive to ~/.ssh/config
 ├── langs/                  # Language-specific setup
 │   └── python/
 │       ├── bootstrap.sh              # pyenv + global-dev virtualenv setup
@@ -49,6 +52,9 @@ dotfiles/
 
 # Generate local git config (interactive)
 ./git_config/generate_gitconfig_local.sh
+
+# SSH config setup (local network agent forwarding + 1Password)
+./ssh_config/generate_ssh_config.sh
 
 # Python environment setup (pyenv 3.14.0 + global-dev virtualenv)
 ./langs/python/bootstrap.sh
@@ -292,6 +298,7 @@ fi
 | Starship       | `~/.config/starship.toml` -> `common/dotconfig/starship.toml` |
 | Git            | `~/.gitconfig` -> `git_config/.gitconfig`      |
 | Git (ignore)   | `~/.gitignore_global` -> `git_config/.gitignore_global` |
+| SSH            | `~/.ssh/config` includes `ssh_config/config_local_network` |
 | **macOS only** | |
 | Aerospace      | `~/.aerospace.toml` -> `mac/.aerospace.toml`   |
 | Brewfile       | `~/Brewfile` -> `mac/Brewfile`                 |
