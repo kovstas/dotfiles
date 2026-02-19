@@ -7,7 +7,15 @@
 #   macOS: checks for 1Password.app
 #   Linux: checks for 1password process
 #
-# This avoids issues with tmux sessions where SSH_CONNECTION can be stale.
+# When connected via SSH (remote session), always use ssh-keygen so that
+# the forwarded agent from the local machine handles signing — even if
+# 1Password happens to be running on the remote host.
+
+# If we're in a remote SSH session, use the forwarded agent via ssh-keygen.
+# SSH_TTY is set by sshd for interactive sessions (survives tmux/screen).
+if [ -n "$SSH_TTY" ]; then
+    exec ssh-keygen "$@"
+fi
 
 case "$(uname -s)" in
     Darwin)
