@@ -1,12 +1,1 @@
-# Claude Code
-.claude/
-CLAUDE.md
-CLAUDE.local.md
-.mcp.json
 
-# OpenCode
-.opencode/
-opencode.json
-opencode.jsonc
-AGENTS.md
-AGENTS.local.md
