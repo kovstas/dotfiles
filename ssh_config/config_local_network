@@ -14,12 +14,12 @@ Host 192.168.68.*
 # Use 1Password agent socket only when NOT inside an SSH session,
 # so forwarded agents from other machines (iPad, etc.) are not overridden.
 # ----------------------------------------------------------------------
-Match host * exec "test -z '$SSH_TTY' && test $(uname -s) = Darwin"
+Match host * exec "test -z \"$SSH_TTY\" && test \"$(uname -s)\" = Darwin"
     IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 # ----------------------------------------------------------------------
 # 1Password SSH Agent (Linux)
 # Same TTY check for Linux with the Linux socket path.
 # ----------------------------------------------------------------------
-Match host * exec "test -z '$SSH_TTY' && test $(uname -s) = Linux"
+Match host * exec "test -z \"$SSH_TTY\" && test \"$(uname -s)\" = Linux"
     IdentityAgent ~/.1password/agent.sock
