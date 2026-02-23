@@ -116,6 +116,24 @@ vim.o.showmode = false
 --  See `:help 'clipboard'`
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
+  -- When inside tmux, use tmux buffer as clipboard provider.
+  -- copy: 'load-buffer -w' stores in tmux buffer AND forwards via OSC 52 to the terminal,
+  --        so yanked text reaches the local system clipboard even through nested tmux/SSH.
+  -- paste: 'save-buffer' reads from tmux buffer, works across panes.
+  -- Outside tmux, 'unnamedplus' uses system clipboard tools (pbcopy/xclip) directly.
+  if os.getenv 'TMUX' then
+    vim.g.clipboard = {
+      name = 'tmux',
+      copy = {
+        ['+'] = { 'tmux', 'load-buffer', '-w', '-' },
+        ['*'] = { 'tmux', 'load-buffer', '-w', '-' },
+      },
+      paste = {
+        ['+'] = { 'tmux', 'save-buffer', '-' },
+        ['*'] = { 'tmux', 'save-buffer', '-' },
+      },
+    }
+  end
 end)
 
 -- Enable break indent
