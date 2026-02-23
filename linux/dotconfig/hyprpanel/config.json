@@ -477,7 +477,7 @@
   "theme.bar.transparent": true,
   "menus.clock.weather.unit": "metric",
   "terminal": "alacritty",
-  "bar.customModules.netstat.labelType": "out",
+  "bar.customModules.netstat.labelType": "full",
   "bar.customModules.updates.leftClick": "alacritty -e /usr/share/hyprpanel/scripts/runUpdates.sh -arch",
   "bar.customModules.cava.showActiveOnly": true,
   "bar.customModules.cava.stereo": false,

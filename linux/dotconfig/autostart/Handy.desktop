@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Version=1.0
-Name=Handy
-Comment=Handystartup script
-Exec=/home/kovstas/Applications/Handy_0.6.11_amd64.AppImage 
-StartupNotify=false
-Terminal=false
