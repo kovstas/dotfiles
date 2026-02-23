@@ -136,6 +136,23 @@ vim.schedule(function()
   end
 end)
 
+
+-- Fix Cmd+V paste in prompt buftype buffers (e.g. Telescope).
+-- The default vim.paste() uses nvim_put() in insert mode, which fails silently
+-- on buftype=prompt. We intercept and use feedkeys() instead (same approach as cmdline mode).
+vim.paste = (function(overridden)
+  return function(lines, phase)
+    if vim.bo.buftype == 'prompt' then
+      -- Flatten to single line (prompt buffers are single-line),
+      -- escape control characters, and feed as keystrokes.
+      local text = table.concat(lines, ' '):gsub('(%c)', '\022%1')
+      vim.api.nvim_feedkeys(text, 'nt', true)
+      return true
+    end
+    return overridden(lines, phase)
+  end
+end)(vim.paste)
+
 -- Enable break indent
 vim.o.breakindent = true
 
