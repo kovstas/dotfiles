@@ -40,6 +40,15 @@ plugins=(
 
 if [[ "$(uname)" =~ Darwin ]]; then
   alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+
+  # Cloudflare Zero Trust (WARP)
+  alias warp-on='warp-cli connect'
+  alias warp-off='warp-cli disconnect'
+  alias warp-status='warp-cli status'
+  alias warp-settings='warp-cli settings list'
+  alias warp-default='warp-cli vnet 0b23fc53-f6e2-4e29-8a5e-d63f89bc7a29 && echo "Switched to default vnet"'
+  alias warp-legacy='warp-cli vnet f4ef38c6-7c88-4df8-9199-1bb7c8f82859 && echo "Switched to legacy vnet"'
+  alias warp-vnet='warp-cli vnet'
 else 
   export PATH="$PATH:$HOME/.local/share/coursier/bin"
 fi
