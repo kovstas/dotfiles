@@ -1,5 +1,3 @@
-#!/usr/bin/env lua
-
 -- Determine the configuration directory
 local config_dir = os.getenv("HOME") .. "/.config/sketchybar"
 
